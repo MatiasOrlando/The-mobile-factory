@@ -1,7 +1,13 @@
 const S = require("sequelize");
 const db = require("../db/db");
+const bcrypt = require("bcrypt");
 
-class Customer extends S.Model {}
+class Customer extends S.Model {
+  async validatePassword(password) {
+    const hashedPassword = await bcrypt.hash(password, this.salt);
+    return hashedPassword === this.password;
+  }
+}
 
 Customer.init(
   {
@@ -17,6 +23,9 @@ Customer.init(
       type: S.STRING,
       allowNull: false,
       unique: true,
+    },
+    salt: {
+      type: S.STRING,
     },
     full_name: {
       type: S.STRING,
@@ -49,5 +58,16 @@ Customer.init(
   },
   { sequelize: db, modelName: "customer" }
 );
+
+Customer.addHook("beforeValidate", async (user) => {
+  const salt = bcrypt.genSaltSync();
+  user.salt = salt;
+  try {
+    const hashedPassword = await bcrypt(user.password, user.salt);
+    return (user.password = hashedPassword);
+  } catch (error) {
+    throw new Error(`PASSWORD ERROR`);
+  }
+});
 
 module.exports = Customer;

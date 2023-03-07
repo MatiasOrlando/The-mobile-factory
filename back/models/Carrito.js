@@ -5,14 +5,14 @@ class Carrito extends S.Model {}
 
 Carrito.init(
   {
-    customerId: {
-      type: S.INTEGER,
-      allowNull: false,
-    },
-    productId: {
-      type: S.ARRAY(S.INTEGER),
-      allowNull: false,
-    },
+    // customerId: {
+    //   type: S.INTEGER,
+    //   allowNull: false,
+    // },
+    // productId: {
+    //   type: S.ARRAY(S.INTEGER),
+    //   allowNull: false,
+    // },
     quantity: {
       type: S.INTEGER,
       allowNull: false,
