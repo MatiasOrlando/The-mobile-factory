@@ -1,18 +1,22 @@
 const express = require("express")
 const userRouter = express.Router()
-const { generateToken } = require("../config/token")
 const { Customer } = require("../models/index")
 const { validateUser } = require("../middleware/auth")
 
+
+
+userRouter.get("/", (req, res) => {
+    res.send("hola mundo")
+})
+
 userRouter.post("/register", (req, res) => {
-    const { email } = req.body;
+
+    const { email, password, full_name, billing_address, default_shipping_address, country, phone } = req.body;
     Customer.findOrCreate({
         where: {
-            email: email,
+            email,
         },
-        defaults: {
-            ...req.body,
-        },
+        defaults: { email, password, full_name, billing_address, default_shipping_address, country, phone },
     })
         .then(([user, created]) => {
             if (!created) return res.send(409)
@@ -84,3 +88,5 @@ userRouter.put("/:id", (req, res) => {
 userRouter.get("/me", validateUser, (req, res) => {
     res.send(req.user);
 });
+
+module.exports = userRouter;

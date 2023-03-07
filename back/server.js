@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const db = require("./db/db");
 const models = require("./models");
+const router = require("./routes/index")
+
+app.use("/", router)
 
 app.use(express.json());
 
