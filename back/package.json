@@ -2,7 +2,12 @@
   "dependencies": {
     "express": "^4.18.2",
     "init": "^0.1.2",
+    "nodemon": "^2.0.21",
     "pg": "^8.10.0",
     "sequelize": "^6.29.1"
+  },
+  "scripts": {
+    "start": "npm start",
+    "server": "nodemon server.js"
   }
 }
