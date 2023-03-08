@@ -40,7 +40,7 @@ productRouter.get("/", (req, res) => {
         try {
           await Product.create(cellphone);
         } catch {
-          throw new Error(`ERROR SEED DATABASES`);
+          throw new Error(`ERROR SEED DATABASE`);
         }
       });
       res.status(200).send(newArr);
