@@ -39,15 +39,16 @@ searchRouter.get("/", (req, res) => {
         };
         return newObj;
       });
-      arrayQuery.map(async (cellphone) => {
-        return await Product.findOrCreate({
-          where: { api_id: cellphone.api_id },
-          defaults: cellphone,
-        });
-      });
+      arrayQuery.map(
+        async (cellphone) =>
+          await Product.findOrCreate({
+            where: { api_id: cellphone.api_id },
+            defaults: cellphone,
+          })
+      );
       res.status(200).send(arrayQuery);
-    } catch (error) {
-      console.log(error);
+    } catch {
+      res.status(404).send(`Product does not exist`);
     }
   };
   fetchDataApi();
