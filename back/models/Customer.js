@@ -49,24 +49,25 @@ Customer.init(
     },
     admin: {
       type: S.BOOLEAN,
-      allowNull: false,
+      defaultValue: false
     },
     owner: {
       type: S.BOOLEAN,
-      allowNull: false,
+      defaultValue: false
     },
   },
   { sequelize: db, modelName: "customer" }
 );
 
-Customer.addHook("beforeValidate", async (user) => {
-  const salt = bcrypt.genSaltSync();
-  user.salt = salt;
+Customer.addHook("beforeCreate", async (user) => {
+  if (!user.password) return;
   try {
-    const hashedPassword = await bcrypt(user.password, user.salt);
+    const salt = bcrypt.genSaltSync(9);
+    user.salt = salt;
+    const hashedPassword = await bcrypt.hash(user.password, user.salt);
     return (user.password = hashedPassword);
   } catch (error) {
-    throw new Error(`PASSWORD ERROR`);
+    throw new Error("PASSWORD ERROR");
   }
 });
 
