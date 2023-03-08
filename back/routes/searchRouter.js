@@ -45,8 +45,7 @@ searchRouter.get("/", (req, res) => {
           defaults: cellphone,
         });
       });
-
-      res.status(200).send(arrayQuery);
+      res.status(200).send(newArr);
     } catch (error) {
       console.log(error);
     }
