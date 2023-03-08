@@ -39,13 +39,13 @@ searchRouter.get("/", (req, res) => {
         };
         return newObj;
       });
-      const newArr = arrayQuery.map(async (cellphone) => {
+      arrayQuery.map(async (cellphone) => {
         return await Product.findOrCreate({
           where: { api_id: cellphone.api_id },
           defaults: cellphone,
         });
       });
-      res.status(200).send(newArr);
+      res.status(200).send(arrayQuery);
     } catch (error) {
       console.log(error);
     }
