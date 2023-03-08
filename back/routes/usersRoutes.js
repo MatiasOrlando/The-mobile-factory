@@ -2,7 +2,7 @@ const express = require("express")
 const userRouter = express.Router()
 const { Customer } = require("../models/index")
 const { validateUser } = require("../middleware/auth")
-
+const { generateToken } = require("../config/token")
 
 
 userRouter.get("/", (req, res) => {
@@ -10,20 +10,7 @@ userRouter.get("/", (req, res) => {
 })
 
 userRouter.post("/register", (req, res) => {
-
-    const { email, password, full_name, billing_address, default_shipping_address, country, phone } = req.body;
-    Customer.findOrCreate({
-        where: {
-            email,
-        },
-        defaults: { email, password, full_name, billing_address, default_shipping_address, country, phone },
-    })
-        .then(([user, created]) => {
-            if (!created) return res.send(409)
-            console.log(user);
-            res.status(201).send(user);
-        })
-        .catch(console.log);
+    Customer.create(req.body).then(user => send.res(user)).catch(() => res.send(404));
 });
 
 userRouter.post("/login", (req, res) => {
