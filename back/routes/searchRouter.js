@@ -1,13 +1,15 @@
 const express = require("express");
-const productRouter = express.Router();
+const searchRouter = express.Router();
 const axios = require("axios");
 const Product = require("../models/Product");
 
-productRouter.get("/", (req, res) => {
+searchRouter.get("/", (req, res) => {
+  // /products/search?q=${name}
+  const { name } = req.query;
   const fetchDataApi = async () => {
     try {
       const data = await axios.get(
-        "https://api.device-specs.io/api/smartphones?populate=*&sort=general_year:desc&pagination[page]=50",
+        `https://api.device-specs.io/api/smartphones?populate=*&filters[name][$containsi]=Iphone`,
         {
           method: "GET",
           headers: {
@@ -16,8 +18,8 @@ productRouter.get("/", (req, res) => {
           },
         }
       );
-      const arrayProducts = data.data.data;
-      const newArr = arrayProducts.map((cellphone) => {
+      const arrayProductsQuery = data.data.data;
+      const arrayQuery = arrayProductsQuery.map((cellphone) => {
         const newObj = {
           api_id: cellphone.id,
           name: cellphone.name,
@@ -37,32 +39,19 @@ productRouter.get("/", (req, res) => {
         };
         return newObj;
       });
-      newArr.forEach(async (cellphone) => {
-        try {
-          await Product.create(cellphone);
-        } catch {
-          throw new Error(`ERROR SEED DATABASE`);
-        }
+      const newArr = arrayQuery.map(async (cellphone) => {
+        return await Product.findOrCreate({
+          where: { api_id: cellphone.api_id },
+          defaults: cellphone,
+        });
       });
-      res.status(200).send(newArr);
-    } catch {
-      res.status(404).send(`DATA NOT AVAILABLE`);
+
+      res.status(200).send(arrayQuery);
+    } catch (error) {
+      console.log(error);
     }
   };
-
   fetchDataApi();
 });
 
-productRouter.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const selectedProduct = await Product.findByPk(id);
-    selectedProduct
-      ? res.status(200).send(selectedProduct)
-      : res.status(204).send(`Product not found`);
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-module.exports = productRouter;
+module.exports = searchRouter;

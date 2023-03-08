@@ -5,6 +5,9 @@ class Product extends S.Model {}
 
 Product.init(
   {
+    api_id: {
+      type: S.INTEGER,
+    },
     name: {
       type: S.STRING,
       allowNull: false,
