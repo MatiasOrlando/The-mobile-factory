@@ -1,8 +1,4 @@
-import "./App.css";
-
-function App() {
-
-  const fetchDataApi = async () => {
+export const fetchDataApi = async () => {
     try {
       const data = await fetch("https://api.device-specs.io/api/smartphones/", {
         method: "GET",
@@ -17,13 +13,3 @@ function App() {
       console.log(error);
     }
   };
-  fetchDataApi();
-
-  return (
-    <div>
-      <h1>HOLA MUNDO :D</h1>
-    </div>
-  );
-}
-
-export default App;
