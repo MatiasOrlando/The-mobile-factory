@@ -1,18 +1,31 @@
 const S = require("sequelize");
 const db = require("../db/db");
+const Customer = require("./Customer");
+const Product = require("./Product");
 
 class Carrito extends S.Model {}
 
 Carrito.init(
   {
-    // customerId: {
-    //   type: S.INTEGER,
-    //   allowNull: false,
-    // },
-    // productId: {
-    //   type: S.ARRAY(S.INTEGER),
-    //   allowNull: false,
-    // },
+    id: {
+      type: S.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+     customerId: {
+       type: S.INTEGER,
+       references: {
+        model: Customer, 
+        key: 'id'
+      }
+    },
+     productId: {
+      type: S.INTEGER,
+      references: {
+        model: Product, 
+        key: 'id'
+      }
+    },
     quantity: {
       type: S.INTEGER,
       allowNull: false,
@@ -21,7 +34,7 @@ Carrito.init(
       type: S.FLOAT,
       allowNull: false,
     },
-    shipping_address: {
+    /* shipping_address: {
       type: S.STRING,
       allowNull: false,
     },
@@ -35,11 +48,11 @@ Carrito.init(
     order_date: {
       type: S.DATE,
       allowNull: false,
-    },
+    }, 
     order_status: {
       type: S.STRING,
       allowNull: false,
-    },
+    } */
   },
   { sequelize: db, modelName: "carrito" }
 );
