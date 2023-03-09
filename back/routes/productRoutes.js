@@ -3,6 +3,7 @@ const productRouter = express.Router();
 const axios = require("axios");
 const Product = require("../models/Product");
 const { defaults } = require("pg");
+const { EagerLoadingError } = require("sequelize");
 
 productRouter.get("/", (req, res) => {
   const fetchDataApi = async () => {
@@ -38,17 +39,19 @@ productRouter.get("/", (req, res) => {
         };
         return newObj;
       });
-      newArr.forEach(async (cellphone) => {
+      const arrayProductsPromise = newArr.map(async (cellphone) => {
         try {
-          await Product.findOrCreate({
+          const [item, created] = await Product.findOrCreate({
             where: { api_id: cellphone.api_id },
             defaults: cellphone,
           });
+          return item.dataValues;
         } catch {
           throw new Error(`ERROR SEED DATABASE`);
         }
       });
-      res.status(200).send(newArr);
+      const productsDb = await Promise.all(arrayProductsPromise);
+      res.status(200).send(productsDb);
     } catch {
       res.status(404).send(`DATA NOT AVAILABLE`);
     }
