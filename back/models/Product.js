@@ -5,45 +5,46 @@ class Product extends S.Model {}
 
 Product.init(
   {
-    id_api: {
+    api_id: {
       type: S.INTEGER,
-      allowNull: false,
-      unique: true
     },
     name: {
       type: S.STRING,
       allowNull: false,
     },
     price: {
-      type: S.FLOAT,
+      type: S.STRING,
       allowNull: false,
     },
     color: {
       type: S.STRING,
       allowNull: false,
     },
-    display_size_inch: {
-      type: S.FLOAT,
+    display_size: {
+      type: S.STRING,
       allowNull: false,
     },
     info: {
       type: S.STRING,
-      allowNull: false,
     },
     images: {
       type: S.ARRAY(S.STRING),
-      defaultValue: [],
+      set(value) {
+        value
+          ? this.setDataValue("images", value)
+          : this.setDataValue("images", []);
+      },
     },
-    general_year: {
+    year: {
       type: S.INTEGER,
       allowNull: false,
     },
-    storage_capacity_gb: {
-      type: S.INTEGER,
+    storage: {
+      type: S.STRING,
       allowNull: false,
     },
-    cpu_number_of_cores: {
-      type: S.INTEGER,
+    amountCores: {
+      type: S.STRING,
       allowNull: false,
     },
     stock: {

@@ -49,11 +49,11 @@ Customer.init(
     },
     admin: {
       type: S.BOOLEAN,
-      defaultValue: false
+      defaultValue: false,
     },
     owner: {
       type: S.BOOLEAN,
-      defaultValue: false
+      defaultValue: false,
     },
   },
   { sequelize: db, modelName: "customer" }
