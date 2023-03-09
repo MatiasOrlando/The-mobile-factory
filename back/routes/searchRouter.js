@@ -9,7 +9,7 @@ searchRouter.get("/", (req, res) => {
   const fetchDataApi = async () => {
     try {
       const data = await axios.get(
-        `https://api.device-specs.io/api/smartphones?populate=*&filters[name][$containsi]=Iphone`,
+        `https://api.device-specs.io/api/smartphones?populate=*&filters[name][$containsi]=Samsung`,
         {
           method: "GET",
           headers: {

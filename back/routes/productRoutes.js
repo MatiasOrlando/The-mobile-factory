@@ -2,6 +2,7 @@ const express = require("express");
 const productRouter = express.Router();
 const axios = require("axios");
 const Product = require("../models/Product");
+const { defaults } = require("pg");
 
 productRouter.get("/", (req, res) => {
   const fetchDataApi = async () => {
@@ -39,7 +40,10 @@ productRouter.get("/", (req, res) => {
       });
       newArr.forEach(async (cellphone) => {
         try {
-          await Product.create(cellphone);
+          await Product.findOrCreate({
+            where: { api_id: cellphone.api_id },
+            defaults: cellphone,
+          });
         } catch {
           throw new Error(`ERROR SEED DATABASE`);
         }
