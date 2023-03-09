@@ -5,7 +5,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 
-function CardItem({ selectedCard }) {
+function CardItem({ device, onClose }) {
   
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -13,25 +13,31 @@ function CardItem({ selectedCard }) {
         <CardMedia
           component="img"
           height="140"
-          image="/static/images/cards/contemplative-reptile.jpg"
+          image={device.images[0]}
           alt="green iguana"
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Lizard
+            {device.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+            {device.info}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Color: {device.color}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {device.price}
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
-          Share
+        <Button size="small" color="primary" onClick={onClose}>
+          Cerrar
         </Button>
       </CardActions>
     </Card>
   );
 }
-export default CardItem
+
+export default CardItem;

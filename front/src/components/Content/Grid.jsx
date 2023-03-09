@@ -6,7 +6,8 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import "./Content.css"
-import {Card}   from '@mui/material';
+import { Card }   from '@mui/material';
+import CardItem from '../../commons/Card/Card';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -17,23 +18,21 @@ const Img = styled('img')({
 
  function Grilla() {
   const [devices, setDevices] = useState([]);
+  const [selectedDevice, setSelectedDevice] = useState(null);
 
   useEffect(() => {
     async function fetchDevices() {
          const response = await fetch("http://localhost:3001/products", 
       );
       const data = await response.json();
-      console.log(data);
       setDevices(data);
       }
     fetchDevices();
   }, []);
-  //console.log(devices.data);
-if (devices.data === undefined ) {
-  return <div>
-    not data
-  </div>
-}else {
+
+  function handleCardClick(device) {
+    setSelectedDevice(device);
+  }
 
   return (
     <Paper
@@ -47,13 +46,13 @@ if (devices.data === undefined ) {
       }}
     >
       <Grid container spacing={6}>
-        {devices.data.map((device) => (
+        {devices.map((device) => (
           <Grid item xs={6} sm={3} md={3} lg={3} xl={3} key={device.api_id}>
-            <Card sx={{ margin: '0 0 18px 0', minWidth: 310, minHeight: 310,  height: 200, display: 'flex', justifyContent: 'space-between',flexWrap: 'wrap'}} >
+            <Card sx={{ margin: '0 0 18px 0', minWidth: 310, minHeight: 310,  height: 200, display: 'flex', justifyContent: 'space-between',flexWrap: 'wrap'}} onClick={() => handleCardClick(device)}>
               <Grid container >
                 <Grid item >
                   <ButtonBase sx={{ width: '100%', height: 125 }}>
-                    <Img alt={device.name} src={device.images ? device.images[0]:""} />
+                    <Img alt={device.name} src={device.images[0]} />
                   </ButtonBase>
                 </Grid>
                 <Grid item xs={12} sm={2} md={2} lg={12} xl={2}>
@@ -66,7 +65,7 @@ if (devices.data === undefined ) {
                         {device.info}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        ID: {device.api_id}
+                        Color: {device.color}
                       </Typography>
                     </Grid>
                     <Grid item>
@@ -77,8 +76,8 @@ if (devices.data === undefined ) {
                   </Grid>
                 </Grid>
                 <Grid item >
-                  <Typography variant="subtitle1" component="div">
-                    {device.prices + "$"}
+                  <Typography variant="body2" color="text.secondary">
+                    {device.price}
                   </Typography>
                 </Grid>
               </Grid>
@@ -86,6 +85,12 @@ if (devices.data === undefined ) {
           </Grid>
         ))}
       </Grid>
+      {selectedDevice && (
+  <CardItem
+    device={selectedDevice}
+    onClose={() => setSelectedDevice(null)}
+  />
+)}
     </Paper>
-  )}}
+  )}
 export default Grilla

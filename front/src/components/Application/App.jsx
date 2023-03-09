@@ -8,7 +8,6 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../state/user';
 
-
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
