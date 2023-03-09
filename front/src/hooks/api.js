@@ -1,4 +1,4 @@
-export const fetchDataApi = async () => {
+/*export const fetchDataApi = async () => {
     try {
       const data = await fetch("https://api.device-specs.io/api/smartphones?populate=*", {
         method: "GET",
@@ -12,4 +12,4 @@ export const fetchDataApi = async () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  };*/
