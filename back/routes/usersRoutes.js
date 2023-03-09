@@ -5,7 +5,11 @@ const { validateUser } = require("../middleware/auth")
 const { generateToken } = require("../config/token")
 
 userRouter.post("/register", (req, res) => {
-    Customer.create(req.body).then(user => send.res(user)).catch(() => res.send(404));
+    console.log(req.body);
+    Customer.create(req.body).then(user => {
+        console.log(user);
+        res.status(201).send(user)
+    }).catch(() => res.send(404));
 });
 
 userRouter.post("/login", (req, res) => {
