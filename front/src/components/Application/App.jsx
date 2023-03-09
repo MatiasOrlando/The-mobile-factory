@@ -1,5 +1,7 @@
 import './App.css';
 import { fetchDataApi } from '../../hooks/api';
+import Grilla from '../Content/Grid';
+import CardItem from '../../commons/Card/Card';
 
 function App() {
 
@@ -7,7 +9,7 @@ function App() {
 
   return (
     <div>
-      <h1>HOLA MUNDO :D</h1>
+     <Grilla/>
     </div>
   );
 }

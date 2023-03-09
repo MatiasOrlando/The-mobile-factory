@@ -1,6 +1,6 @@
 export const fetchDataApi = async () => {
     try {
-      const data = await fetch("https://api.device-specs.io/api/smartphones/", {
+      const data = await fetch("https://api.device-specs.io/api/smartphones?populate=*", {
         method: "GET",
         headers: {
           Authorization:
