@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../state/user";
+
+
 
 export const Login = (user) => {
+
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -11,11 +17,12 @@ export const Login = (user) => {
   const handleSubmiit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3001/users/login", { email, password },{withCredentials:true})
+      .post("http://localhost:3001/users/login", { email, password })
       .then((res) => {
         console.log(res.data);
-        //localStorage.setItem("user", JSON.stringify(res.data));
         //setUser(res.data);
+        localStorage.setItem("user", JSON.stringify(res.data));
+        dispatch(setUser(res.data))
       })
       .then(() => {
         navigate("/");
