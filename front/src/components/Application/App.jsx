@@ -2,17 +2,45 @@ import './App.css';
 import Grilla from '../Content/Grid';
 import { Register } from '../Register/Register';
 import { Login } from '../Login/Login';
-import {BrowserRouter, Routes, Route} from "react-router-dom"
+import {BrowserRouter, Routes, Route, useNavigate} from "react-router-dom"
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../state/user';
+
 
 function App() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const userPersist = JSON.parse(localStorage.getItem("user")) || {}
+    dispatch(setUser(userPersist));
+  }, [])
+
+  const handleClick = async () => {
+    try {
+      localStorage.removeItem("user");
+      dispatch(setUser({}));
+      await axios.post("http://localhost:3001/users/logout")
+      navigate("/login")
+    } catch (error) {
+      console.error(error)
+    }
+    
+  }
 
   return (
     <div>
-      <BrowserRouter>
+      
         <Routes>
           <Route path='/login' element={<Login /> } />
+          <Route path='/register' element={<Register /> } />
+          <Route path='/' element={ 
+            <button onClick={() => handleClick()}>LOGOUT</button>
+           } />
         </Routes> 
-     </BrowserRouter>
+    
     </div>
   );
 }

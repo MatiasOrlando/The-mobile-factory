@@ -11,8 +11,10 @@ import {
   TextField,
   Button,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
+  const navigate = useNavigate();
   const [full_name, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,6 +36,7 @@ export const Register = () => {
       })
       .then((res) => {
         console.log("Usuario creado", res.data);
+        navigate("/login");
       })
       .catch((err) => console.log("Error de registro", err));
   };
