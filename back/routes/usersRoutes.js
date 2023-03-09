@@ -22,12 +22,13 @@ userRouter.post("/login", (req, res) => {
         .then((user) => {
             if (!user) return res.send(404);
             console.log(user);
-            let { email, name, lastName, id } = user;
+            let { email, full_name, id } = user;
             user.validatePassword(password).then((valid) => {
                 if (!valid) {
                     return res.send(401);
                 } else {
-                    let token = generateToken({ email, name, lastName, id });
+                    let token = generateToken({ email, full_name, id });
+                    console.log(token);
                     return res.cookie("token", token).send(user);
                 }
             });

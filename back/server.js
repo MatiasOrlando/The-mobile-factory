@@ -4,10 +4,15 @@ const db = require("./db/db");
 const models = require("./models");
 const router = require("./routes/index");
 const cors = require("cors")
-const cookies = require("cookie-parser")
+const cookiesParser = require("cookie-parser")
 
-app.use(cookies())
-app.use(cors());
+app.use(cookiesParser())
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "DELETE", "OPTIONS", "PUT"],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use("/", router);
 
