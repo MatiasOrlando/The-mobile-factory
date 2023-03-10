@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../state/user';
+import CardItem from '../../commons/Card/Card';
 
 function App() {
   const navigate = useNavigate();
@@ -35,6 +36,8 @@ function App() {
         <Routes>
           <Route path='/login' element={<Login /> } />
           <Route path='/register' element={<Register /> } />
+          <Route path='/grilla' element={<Grilla /> } />
+          <Route path='/detail/:id' element={<CardItem/> } />
           <Route path='/' element={ 
             <button onClick={() => handleClick()}>LOGOUT</button>
            } />
