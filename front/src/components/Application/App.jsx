@@ -21,7 +21,7 @@ function App() {
     try {
       localStorage.removeItem("user");
       dispatch(setUser({}));
-      await axios.post("http://localhost:3001/users/logout")
+      await axios.post("http://127.0.0.1:3001/users/logout", {}, {withCredentials: true})
       navigate("/login")
     } catch (error) {
       console.error(error)

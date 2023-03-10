@@ -17,7 +17,7 @@ export const Login = (user) => {
   const handleSubmiit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3001/users/login", { email, password })
+      .post("http://127.0.0.1:3001/users/login", { email, password }, {withCredentials: true})
       .then((res) => {
         console.log(res.data);
         //setUser(res.data);
