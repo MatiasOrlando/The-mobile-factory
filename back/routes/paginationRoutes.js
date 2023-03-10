@@ -1,13 +1,14 @@
 const express = require("express");
-const productRouter = express.Router();
+const paginationRouter = express.Router();
 const axios = require("axios");
 const Product = require("../models/Product");
 
-productRouter.get("/", (req, res) => {
+paginationRouter.get("/:id", (req, res) => {
+  // id - param - xxx
   const fetchDataApi = async () => {
     try {
       const data = await axios.get(
-        "https://api.device-specs.io/api/smartphones?populate=*&sort=general_year:desc&pagination[page]=50",
+        "https://api.device-specs.io/api/smartphones?populate=*&sort=general_year:desc&pagination[page]=51",
         {
           method: "GET",
           headers: {
@@ -58,16 +59,4 @@ productRouter.get("/", (req, res) => {
   fetchDataApi();
 });
 
-productRouter.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const selectedProduct = await Product.findByPk(id);
-    selectedProduct
-      ? res.status(200).send(selectedProduct)
-      : res.status(204).send(`Product not found`);
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-module.exports = productRouter;
+module.exports = paginationRouter;
