@@ -32,7 +32,7 @@ export const Register = () => {
         phone,
         billing_address,
         default_shipping_address: billing_address,
-        country
+        country,
       })
       .then((res) => {
         console.log("Usuario creado", res.data);
@@ -112,7 +112,7 @@ export const Register = () => {
                 required
                 fullWidth
                 placeholder="Email"
-                type="text"
+                type="email"
               />
             </Grid>
             <Grid item xs={6} sm={6}>
@@ -123,7 +123,7 @@ export const Register = () => {
                 required
                 fullWidth
                 placeholder="Password"
-                type="text"
+                type="password"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -172,4 +172,5 @@ export const Register = () => {
         </form>
       </Paper>
     </Container>
-  )}
+  );
+};

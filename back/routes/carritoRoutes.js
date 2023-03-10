@@ -2,14 +2,14 @@ const express = require("express");
 const { Product, Carrito } = require("../models");
 const carritoRouter = express.Router();
 
-carritoRouter.get("/", async (req, res) => {
+/* carritoRouter.get("/", async (req, res) => {
   console.log("FUNCIONA!!");
   res.send();
   try {
   } catch (error) {
     console.error(error);
   }
-});
+}); */
 
 carritoRouter.post("/", async (req, res) => {
   // req.body { info_producto (cantidad de productos), info_customer }
@@ -54,7 +54,7 @@ carritoRouter.post("/", async (req, res) => {
 
 carritoRouter.delete("/", async (req, res) => {
   // req.body { info_producto, info_customer }
-  const { productId, customerId } = req.body;
+  const { productId, customerId } = req.query;
 
   try {
     const item = await Carrito.findOne({

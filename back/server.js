@@ -6,12 +6,13 @@ const router = require("./routes/index");
 const cors = require("cors");
 const cookiesParser = require("cookie-parser");
 
-app.use(cookiesParser())
-app.use(cors({
-  origin: "http://127.0.0.1:5173",
-  credentials: true,
-}));
-
+app.use(cookiesParser());
+app.use(
+  cors({
+    origin: "http://127.0.0.1:5173",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use("/", router);
