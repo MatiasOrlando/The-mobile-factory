@@ -4,10 +4,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../state/user";
 
-
-
 export const Login = (user) => {
-
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
@@ -17,12 +14,16 @@ export const Login = (user) => {
   const handleSubmiit = (e) => {
     e.preventDefault();
     axios
-      .post("http://127.0.0.1:3001/users/login", { email, password }, {withCredentials: true})
+      .post(
+        "http://127.0.0.1:3001/users/login",
+        { email, password },
+        { withCredentials: true }
+      )
       .then((res) => {
         console.log(res.data);
         //setUser(res.data);
         localStorage.setItem("user", JSON.stringify(res.data));
-        dispatch(setUser(res.data))
+        dispatch(setUser(res.data));
       })
       .then(() => {
         navigate("/");
@@ -33,7 +34,7 @@ export const Login = (user) => {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: "10%" }}>
       <form onSubmit={handleSubmiit}>
         <input
           placeholder="Email"
