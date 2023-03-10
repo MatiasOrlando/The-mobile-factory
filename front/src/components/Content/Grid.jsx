@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import "./Content.css";
-import { Card } from "@mui/material";
+import { Button, Card } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { cartProducts } from "../../state/products";
@@ -50,25 +50,42 @@ function Grilla() {
       <Grid container spacing={6}>
         {devices.map((device) => (
           <Grid item xs={6} sm={3} md={3} lg={3} xl={3} key={device.id}>
-            {/* <StyledLink to={`/detail/${device.id}`}> */}
             <Card
               sx={{
                 margin: "0 0 18px 0",
                 minWidth: 310,
-                minHeight: 310,
+                minHeight: 350,
                 height: 200,
                 display: "flex",
                 justifyContent: "space-between",
                 flexWrap: "wrap",
               }}
             >
-              <Grid container>
+              <Grid
+                container
+                sx={{
+                  padding: "10px",
+
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
                 <Grid item>
-                  <ButtonBase sx={{ width: "100%", height: 125 }}>
-                    <Img alt={device.name} src={device.images[0]} />
-                  </ButtonBase>
+                  <StyledLink to={`/detail/${device.id}`}>
+                    <ButtonBase sx={{ width: "100%", height: 125 }}>
+                      <Img alt={device.name} src={device.images[0]} />
+                    </ButtonBase>
+                  </StyledLink>
                 </Grid>
-                <Grid item xs={12} sm={2} md={2} lg={12} xl={2}>
+                <Grid
+                  item
+                  sx={{ textAlign: "center" }}
+                  xs={12}
+                  sm={2}
+                  md={2}
+                  lg={12}
+                  xl={2}
+                >
                   <Grid container direction="column" spacing={2}>
                     <Grid item>
                       <Typography
@@ -84,6 +101,11 @@ function Grilla() {
                       <Typography variant="body2" color="text.secondary">
                         Color: {device.color}
                       </Typography>
+                      <Grid item>
+                        <StyledLink to={`/detail/${device.id}`}>
+                          <Typography>ver detalles</Typography>{" "}
+                        </StyledLink>
+                      </Grid>
                     </Grid>
                     <Grid item>
                       <Typography
@@ -105,7 +127,6 @@ function Grilla() {
                 </Grid>
               </Grid>
             </Card>
-            {/* </StyledLink> */}
           </Grid>
         ))}
       </Grid>

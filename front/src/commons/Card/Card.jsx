@@ -10,7 +10,11 @@ import axios from "axios";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { cartProducts } from "../../state/products";
+
 function CardItem() {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const [phone, setPhone] = useState({});
   console.log(id);
@@ -30,18 +34,28 @@ function CardItem() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          width: "60%",
+          margin: "0 auto",
         }}
       >
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <Card
-              sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+              }}
             >
               <CardActionArea sx={{ flex: 1 }}>
                 <CardMedia
                   component="img"
                   image={phone.data.images[0]}
-                  style={{ maxHeight: 400, objectFit: "contain" }}
+                  style={{
+                    maxHeight: 400,
+                    objectFit: "contain",
+                    padding: "20px 0px 20px 0px",
+                  }}
                 />
               </CardActionArea>
             </Card>
@@ -54,21 +68,44 @@ function CardItem() {
                     {phone.data.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {phone.data.info}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
                     Color: {phone.data.color}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {phone.data.price}
+                    Display: {phone.data.display_size}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Almacenamiento: {phone.data.storage}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Nucleos: {phone.data.amountCores}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Año: {phone.data.year}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Precio: {phone.data.price}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Stock: {phone.data.stock}
                   </Typography>
                 </CardContent>
               </CardActionArea>
-              <CardActions>
-                <Button size="small" color="primary">
+              <CardActions
+                sx={{ display: "flex", justifyContent: "space-evenly" }}
+              >
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={() => {
+                    console.log(phone);
+                    dispatch(cartProducts(phone.data));
+                  }}
+                >
                   Añadir al carrito
                 </Button>
-                <Button size="small" component={Link} to="/grilla">Volver atrás</Button>
+                <Button size="small" component={Link} to="/">
+                  Volver atrás
+                </Button>
               </CardActions>
             </Card>
           </Grid>
@@ -79,3 +116,13 @@ function CardItem() {
 }
 
 export default CardItem;
+
+// <Button
+//                   size="small"
+//                   color="primary"
+//                   onClick={() => {
+//                     dispatch(cartProducts(device));
+//                   }}
+//                 >
+//                   Añadir al carrito
+//                 </Button>

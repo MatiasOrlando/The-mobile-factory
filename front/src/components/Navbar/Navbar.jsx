@@ -13,12 +13,16 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setUser } from "../../state/user";
+import { styled } from "@mui/material/styles";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const StyledLink = styled(Link)({
+    textDecoration: "none",
+  });
   const handleClick = async () => {
     try {
       localStorage.removeItem("user");
@@ -46,9 +50,9 @@ const Navbar = () => {
               <ShoppingCartIcon sx={{ transform: "scale(1.5)" }} />{" "}
             </Link>
           ) : (
-            <Link to={"/login"}>
+            <StyledLink to={"/login"}>
               <ShoppingCartIcon sx={{ transform: "scale(1.5)" }} />{" "}
-            </Link>
+            </StyledLink>
           )}
           <>
             <Tabs
@@ -58,9 +62,9 @@ const Navbar = () => {
               value={0}
               onChange={(e, value) => setValue(value)}
             >
-              <Link to={"/"}>
+              <StyledLink to={"/"}>
                 <Tab href="/" label="home" />
-              </Link>
+              </StyledLink>
 
               <Tab label="categories" />
               <Tab label="sale*" />
@@ -79,16 +83,16 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/login">
+                <StyledLink to="/login">
                   <Button sx={{ marginLeft: "auto" }} variant="contained">
                     Login
                   </Button>
-                </Link>
-                <Link to="/register">
+                </StyledLink>
+                <StyledLink to="/register">
                   <Button sx={{ marginLeft: "10px" }} variant="contained">
                     SignUp
                   </Button>
-                </Link>
+                </StyledLink>
               </>
             )}
           </>
