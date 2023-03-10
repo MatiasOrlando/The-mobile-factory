@@ -67,19 +67,23 @@ const Navbar = () => {
               </StyledLink>
 
               <Tab label="categories" />
-              <Tab label="sale*" />
+              <Tab label="sale" />
             </Tabs>
 
             {user.id ? (
               <>
-                <Typography>{user.full_name}</Typography>
-                <Button
-                  onClick={() => handleClick()}
-                  sx={{ marginLeft: "auto" }}
-                  variant="contained"
-                >
-                  Logout
-                </Button>
+                <div style={{ padding: "0px 20px 0px 20px ", display: "flex" }}>
+                  <Button
+                    onClick={() => handleClick()}
+                    sx={{ marginLeft: "auto" }}
+                    variant="contained"
+                  >
+                    Logout
+                  </Button>
+                  <Typography sx={{ marginLeft: "5px", marginTop: "5px" }}>
+                    {user.full_name}
+                  </Typography>
+                </div>
               </>
             ) : (
               <>

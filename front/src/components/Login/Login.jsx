@@ -3,15 +3,15 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../state/user";
+import { Box, Button, TextField, Typography } from "@mui/material";
 
 export const Login = (user) => {
   const dispatch = useDispatch();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmiit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     axios
       .post(
@@ -34,22 +34,45 @@ export const Login = (user) => {
   };
 
   return (
-    <div style={{ marginTop: "10%" }}>
-      <form onSubmit={handleSubmiit}>
-        <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        ></input>
-        <br />
-        <input
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        ></input>
-        <br />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Box sx={{ width: "25%" }}>
+          <form onSubmit={handleSubmit}>
+            <Typography
+              variant="h4"
+              align="center"
+              style={{ marginBottom: "3rem" }}
+            >
+              Login
+            </Typography>
+            <TextField
+              label="Email"
+              fullWidth
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{ marginBottom: "1rem" }}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              sx={{ marginBottom: "1rem" }}
+            />
+            <Button variant="contained" type="submit" fullWidth>
+              Login
+            </Button>
+          </form>
+        </Box>
+      </Box>
+    </>
   );
 };

@@ -47,7 +47,7 @@ function Grilla() {
           theme.palette.mode === "dark" ? "#1A2027" : "#fff",
       }}
     >
-      <Grid container spacing={6}>
+      <Grid container spacing={6} sx={{ marginTop: "5%" }}>
         {devices.map((device) => (
           <Grid item xs={6} sm={3} md={3} lg={3} xl={3} key={device.id}>
             <Card
