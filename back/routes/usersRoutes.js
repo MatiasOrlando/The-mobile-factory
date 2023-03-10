@@ -37,7 +37,7 @@ userRouter.post("/login", (req, res) => {
 });
 
 userRouter.post("/logout", (req, res, next) => {
-    res.clearCookie("token").sendStatus(204);
+    res.clearCookie("token").send();
 });
 
 userRouter.put("/:id", (req, res) => {
