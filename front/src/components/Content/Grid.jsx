@@ -7,7 +7,8 @@ import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import "./Content.css"
 import { Card }   from '@mui/material';
-import CardItem from '../../commons/Card/Card';
+import { Link } from 'react-router-dom';
+//import axios from 'axios';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -15,10 +16,12 @@ const Img = styled('img')({
   maxWidth: '100%',
   maxHeight: '100%',
 });
+const StyledLink = styled(Link)({
+  textDecoration: 'none',
+});
 
  function Grilla() {
   const [devices, setDevices] = useState([]);
-  const [selectedDevice, setSelectedDevice] = useState(null);
 
   useEffect(() => {
     async function fetchDevices() {
@@ -29,10 +32,6 @@ const Img = styled('img')({
       }
     fetchDevices();
   }, []);
-
-  function handleCardClick(device) {
-    setSelectedDevice(device);
-  }
 
   return (
     <Paper
@@ -47,8 +46,9 @@ const Img = styled('img')({
     >
       <Grid container spacing={6}>
         {devices.map((device) => (
-          <Grid item xs={6} sm={3} md={3} lg={3} xl={3} key={device.api_id}>
-            <Card sx={{ margin: '0 0 18px 0', minWidth: 310, minHeight: 310,  height: 200, display: 'flex', justifyContent: 'space-between',flexWrap: 'wrap'}} onClick={() => handleCardClick(device)}>
+          <Grid item xs={6} sm={3} md={3} lg={3} xl={3} key={device.id}>
+            <StyledLink to={`/detail/${device.id}`}>
+            <Card sx={{ margin: '0 0 18px 0', minWidth: 310, minHeight: 310,  height: 200, display: 'flex', justifyContent: 'space-between',flexWrap: 'wrap'}} >
               <Grid container >
                 <Grid item >
                   <ButtonBase sx={{ width: '100%', height: 125 }}>
@@ -82,15 +82,10 @@ const Img = styled('img')({
                 </Grid>
               </Grid>
             </Card>
+            </StyledLink>
           </Grid>
         ))}
       </Grid>
-      {selectedDevice && (
-  <CardItem
-    device={selectedDevice}
-    onClose={() => setSelectedDevice(null)}
-  />
-)}
     </Paper>
   )}
 export default Grilla
