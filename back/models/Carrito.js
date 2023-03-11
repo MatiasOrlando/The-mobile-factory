@@ -31,7 +31,7 @@ Carrito.init(
       allowNull: false,
     },
     price: {
-      type: S.FLOAT,
+      type: S.STRING,
       allowNull: false,
     },
     /* shipping_address: {
