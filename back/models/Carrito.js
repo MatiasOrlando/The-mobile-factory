@@ -33,26 +33,7 @@ Carrito.init(
     price: {
       type: S.STRING,
       allowNull: false,
-    },
-    /* shipping_address: {
-      type: S.STRING,
-      allowNull: false,
-    },
-    order_email: {
-      type: S.STRING,
-      validate: {
-        isEmail: true,
-        notEmpty: true,
-      },
-    },
-    order_date: {
-      type: S.DATE,
-      allowNull: false,
-    }, 
-    order_status: {
-      type: S.STRING,
-      allowNull: false,
-    } */
+    }
   },
   { sequelize: db, modelName: "carrito" }
 );
