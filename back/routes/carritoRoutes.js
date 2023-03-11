@@ -3,14 +3,20 @@ const { Product, Carrito, Customer } = require("../models");
 const carritoRouter = express.Router();
 
 carritoRouter.get("/:id", async (req, res) => {
+  /* Ruta para obtener todos los productos en el carrito de un usuario */
   /* Id del customer enviado como param */
   const { id } = req.params;
   const customerId = Number(id);
-  
+
   try {
-    const products = await Carrito.findAll({where: {customerId: customerId}, include: [{model: Product}]})
-    console.log(products);
-    res.send(products)
+    const products = await Carrito.findAll({
+      where: { customerId },
+      include: { model: Product },
+    });
+    if (!products.length)
+      return res.status(404).send("No existe ese usuario en la DB");
+    const arrProd = products.map((item) => item.dataValues.product.dataValues);
+    res.send(arrProd);
   } catch (error) {
     console.error(error);
     res.status(404).send(error);
@@ -18,8 +24,9 @@ carritoRouter.get("/:id", async (req, res) => {
 });
 
 carritoRouter.post("/", async (req, res) => {
-  /* Deben ser INTEGER */
+  /* Ruta para agregar un producto al carrito de cierto usuario */
   /* Esta ruta también pueden usarla para sumar a la cantidad existente más cantidades, por ejemplo en caso que el usuario clickee varias veces agregar al carrito en el menu principal */
+  /* Deben ser INTEGER los datos enviados */
   const { productId, customerId, productQuantity } = req.body;
 
   if (
@@ -60,18 +67,19 @@ carritoRouter.post("/", async (req, res) => {
 });
 
 carritoRouter.delete("/", async (req, res) => {
-  
-  /* Query con los id, del producto a eliminar y del usuario */
+  /* Ruta para eliminar un producto del carrito de cierto usuario */
+  /* Los datos enviados deben ser por Query con los id, del producto a eliminar y del usuario */
   /* Para usarlas, se le pega a esta ruta DELETE: "http://localhost:3001/carrito/" y se le agrega "?" con los datos, por ejemplo: "http://localhost:3001/carrito/?productId=2&customerId=1", esto enviaría una variable productId con la string "2", y otra llamada customerId con la string "1" */
 
-  const productId = Number(req.query.productId)
-  const customerId = Number(req.query.customerId)
-  
+  const productId = Number(req.query.productId);
+  const customerId = Number(req.query.customerId);
+
   try {
     const item = await Carrito.findOne({
       where: { customerId: customerId, productId: productId },
     });
-    if (!item) return res.status(404).send("Relación usuario/producto inexistente")
+    if (!item)
+      return res.status(404).send("Relación usuario/producto inexistente");
     await Carrito.destroy({ where: { id: item.dataValues.id } });
     res.send(item);
   } catch (error) {
@@ -81,8 +89,9 @@ carritoRouter.delete("/", async (req, res) => {
 });
 
 carritoRouter.put("/", async (req, res) => {
-  /* Deben ser INTEGER */
-  /* La cantidad debe ser la NUEVA cantidad del producto */
+  /* Ruta para editar la cantidad de un producto en el carrito */
+  /* La cantidad enviada debe ser la NUEVA cantidad del producto */
+  /* Deben ser INTEGER los datos enviados */
   const { productId, customerId, productQuantity } = req.body;
 
   if (
