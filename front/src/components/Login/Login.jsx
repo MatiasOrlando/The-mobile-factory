@@ -15,7 +15,7 @@ export const Login = (user) => {
     e.preventDefault();
     axios
       .post(
-        "http://127.0.0.1:3001/users/login",
+        "http://localhost:3001/users/login",
         { email, password },
         { withCredentials: true }
       )
