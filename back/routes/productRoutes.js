@@ -4,10 +4,13 @@ const axios = require("axios");
 const Product = require("../models/Product");
 
 productRouter.get("/", (req, res) => {
+  const { page } = req.query;
   const fetchDataApi = async () => {
     try {
       const data = await axios.get(
-        "https://api.device-specs.io/api/smartphones?populate=*&sort=general_year:desc&pagination[page]=50",
+        `https://api.device-specs.io/api/smartphones?populate=*&sort=general_year:desc&pagination[page]=${parseInt(
+          page
+        )}`,
         {
           method: "GET",
           headers: {
