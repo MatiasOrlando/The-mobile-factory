@@ -12,20 +12,6 @@ Carrito.init(
       primaryKey: true,
       autoIncrement: true
     },
-     customerId: {
-       type: S.INTEGER,
-       references: {
-        model: Customer, 
-        key: 'id'
-      }
-    },
-     productId: {
-      type: S.INTEGER,
-      references: {
-        model: Product, 
-        key: 'id'
-      }
-    },
     quantity: {
       type: S.INTEGER,
       allowNull: false,
