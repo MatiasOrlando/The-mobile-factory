@@ -17,13 +17,11 @@ function CardItem() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [phone, setPhone] = useState({});
-  console.log(id);
   useEffect(() => {
     axios.get(`http://localhost:3001/products/${id}`).then((data) => {
       setPhone(data);
     });
   }, [id]);
-  console.log(phone);
   if (phone.data === undefined) {
     ("not dta");
   } else {

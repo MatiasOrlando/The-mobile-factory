@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setUser } from "../../state/user";
 import { styled } from "@mui/material/styles";
+import axios from "axios";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
@@ -39,7 +40,6 @@ const Navbar = () => {
   };
 
   const theme = useTheme();
-  console.log(theme);
 
   return (
     <React.Fragment>
