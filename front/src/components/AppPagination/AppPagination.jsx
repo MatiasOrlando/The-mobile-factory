@@ -8,10 +8,12 @@ const AppPagination = ({ setPage }) => {
   };
 
   return (
-    <Pagination
-      onChange={(e) => handleChange(e.target.textContent)}
-      count={5}
-    />
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Pagination
+        onChange={(e) => handleChange(e.target.textContent)}
+        count={5}
+      />
+    </div>
   );
 };
 
