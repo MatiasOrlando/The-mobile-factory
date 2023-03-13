@@ -134,7 +134,7 @@ function Grilla() {
           </Grid>
         ))}
       </Grid>
-      <AppPagination setPage={setPage} page={page} />
+      <AppPagination setPage={setPage} />
     </Paper>
   );
 }
