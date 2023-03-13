@@ -11,6 +11,8 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { cartProducts } from "../../state/products";
 import AppPagination from "../AppPagination/AppPagination";
+import axios from "axios";
+
 
 const Img = styled("img")({
   margin: "auto",
@@ -28,6 +30,7 @@ function Grilla() {
   const dispatch = useDispatch();
 
   const cart = useSelector((state) => state.products);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     async function fetchDevices() {
@@ -39,6 +42,15 @@ function Grilla() {
     }
     fetchDevices();
   }, [page]);
+
+  const handleCarrito = async (device) => {
+    try {
+      const productAdded = await axios.post(`http://localhost:3001/carrito`, {productId: Number(device.id), customerId: Number(user.id), productQuantity: 1})
+      dispatch(cartProducts(productAdded.data))
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <Paper
@@ -113,9 +125,7 @@ function Grilla() {
                     </Grid>
                     <Grid item>
                       <Typography
-                        onClick={() => {
-                          dispatch(cartProducts(device));
-                        }}
+                        onClick={() => handleCarrito(device)}
                         sx={{ cursor: "pointer" }}
                         variant="body2"
                       >

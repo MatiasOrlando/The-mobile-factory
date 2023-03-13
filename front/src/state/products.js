@@ -1,36 +1,32 @@
-import { createAction, createReducer } from "@reduxjs/toolkit";
+import { createAction, createReducer, current } from "@reduxjs/toolkit";
 
 export const cartProducts = createAction("CART_PRODUCTS");
-export const addToCart = createAction("ADD_TO_CART");
-export const removeFromCart = createAction("REMOVE_FROM_CART");
+export const removeProduct = createAction("REMOVE_PRODUCT");
 export const resetProducts = createAction("RESET_PRODUCTS");
+export const loginProducts = createAction("LOGIN_PRODUCTS");
 
 const initialstate = [];
 
 const reducer = createReducer(initialstate, {
   [cartProducts]: (state, action) => {
-    state.push(action.payload);
-    localStorage.setItem("cart", JSON.stringify(state));
-    return state;
+    const obj = state.find((e) => e.id === action.payload.id);
+
+    if (obj) {
+      obj.shopQuantity = action.payload.shopQuantity;
+      return state;
+    }
+
+    return [...state, action.payload];
   },
   [resetProducts]: (state, action) => {
     return initialstate;
   },
-  [addToCart]: (state, action) => {
-    if (
-      state.addedProducts.find((product) => product.id === action.payload.id)
-    ) {
-      state.message = "Flight already in favorites";
-    } else {
-      state.addedProducts.push(action.payload);
-      state.message = "product added to cart";
-    }
+  [loginProducts]: (state, action) => {
+    return action.payload;
   },
-  [removeFromCart]: (state, action) => {
-    state.addedProducts = state.addedProducts.filter(
-      (producto) => producto.id !== action.payload.id
-    );
-    state.message = "Product removed from cart";
+  [removeProduct]: (state, action) => {
+    state = state.filter((producto) => producto.id !== action.payload.productId);
+    return state;
   },
 });
 
