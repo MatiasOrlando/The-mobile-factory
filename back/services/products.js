@@ -7,7 +7,7 @@ class ProductsService {
       const res = await axios.get(
         `https://api.device-specs.io/api/smartphones?populate=*&sort=general_year:desc&pagination[page]=${parseInt(
           page
-        )}`,
+        )}&pagination[pageSize]=12`,
         {
           method: "GET",
           headers: {

@@ -13,7 +13,6 @@ import { cartProducts } from "../../state/products";
 import AppPagination from "../AppPagination/AppPagination";
 import axios from "axios";
 
-
 const Img = styled("img")({
   margin: "auto",
   display: "block",
@@ -26,7 +25,7 @@ const StyledLink = styled(Link)({
 
 function Grilla() {
   const [devices, setDevices] = useState([]);
-  const [page, setPage] = useState(50);
+  const [page, setPage] = useState(104);
   const dispatch = useDispatch();
 
   const cart = useSelector((state) => state.products);
@@ -45,12 +44,16 @@ function Grilla() {
 
   const handleCarrito = async (device) => {
     try {
-      const productAdded = await axios.post(`http://localhost:3001/carrito`, {productId: Number(device.id), customerId: Number(user.id), productQuantity: 1})
-      dispatch(cartProducts(productAdded.data))
+      const productAdded = await axios.post(`http://localhost:3001/carrito`, {
+        productId: Number(device.id),
+        customerId: Number(user.id),
+        productQuantity: 1,
+      });
+      dispatch(cartProducts(productAdded.data));
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   return (
     <Paper

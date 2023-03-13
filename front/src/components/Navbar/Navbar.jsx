@@ -17,9 +17,9 @@ import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { resetProducts } from "../../state/products";
 
-
 const Navbar = () => {
   const user = useSelector((state) => state.user);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -28,7 +28,6 @@ const Navbar = () => {
   });
   const handleClick = async () => {
     try {
-      
       await axios.post(
         "http://localhost:3001/users/logout",
         {},
