@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { cartProducts } from "../../state/products";
 import AppPagination from "../AppPagination/AppPagination";
 import axios from "axios";
+import { Button } from "@mui/material";
 
 const Img = styled("img")({
   margin: "auto",
@@ -26,6 +27,7 @@ const StyledLink = styled(Link)({
 function Grilla() {
   const [devices, setDevices] = useState([]);
   const [page, setPage] = useState(104);
+  const [stockItem, setStockItem] = useState(false);
   const dispatch = useDispatch();
 
   const cart = useSelector((state) => state.products);
@@ -73,7 +75,7 @@ function Grilla() {
               sx={{
                 margin: "0 0 18px 0",
                 minWidth: 310,
-                minHeight: 350,
+                minHeight: 400,
                 height: 200,
                 display: "flex",
                 justifyContent: "space-between",
@@ -117,6 +119,9 @@ function Grilla() {
                       <Typography variant="body2" gutterBottom>
                         {device.info}
                       </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        Stock : {device.stock}
+                      </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Color: {device.color}
                       </Typography>
@@ -127,13 +132,16 @@ function Grilla() {
                       </Grid>
                     </Grid>
                     <Grid item>
-                      <Typography
-                        onClick={() => handleCarrito(device)}
+                      <Button
+                        disabled={device.stock ? false : true}
+                        onClick={() => {
+                          handleCarrito(device);
+                        }}
                         sx={{ cursor: "pointer" }}
                         variant="body2"
                       >
                         Añadir al carrito
-                      </Typography>
+                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>

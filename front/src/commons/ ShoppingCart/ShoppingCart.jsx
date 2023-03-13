@@ -13,10 +13,11 @@ import { Add, Remove, Delete } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { cartProducts, removeProduct } from "../../state/products";
+import { useNavigate } from "react-router-dom";
 
 function GrillaDeProductos() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [total, setTotal] = useState(0);
   const [carrito, setCarrito] = useState([]);
 
@@ -62,11 +63,13 @@ function GrillaDeProductos() {
   }
 
   async function eliminar(producto) {
-
     try {
-      const productDeleted = await axios.delete(`http://localhost:3001/carrito?productId=${producto.id}&customerId=${user.id}`);
-      console.log(productDeleted.data);
+      const productDeleted = await axios.delete(
+        `http://localhost:3001/carrito?productId=${producto.id}&customerId=${user.id}`
+      );
+
       dispatch(removeProduct(productDeleted.data));
+      products.length === 1 && navigate("/");
     } catch (error) {
       console.error(error);
     }
@@ -80,7 +83,7 @@ function GrillaDeProductos() {
   }
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" sx={{ marginTop: "150px" }}>
       <Grid container spacing={3}>
         {products.length &&
           products.map((producto, index) => (
@@ -90,14 +93,20 @@ function GrillaDeProductos() {
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
+                  maxWidth: 260,
                 }}
               >
                 <CardMedia
                   component="img"
                   image={producto.images[0]}
                   alt={producto.name}
+                  style={{
+                    maxHeight: 280,
+                    objectFit: "contain",
+                    padding: "20px 0px 20px 0px",
+                  }}
                 />
-                <CardContent sx={{ flexGrow: 1 }}>
+                <CardContent sx={{ flexGrow: 1 }} align="center">
                   <Typography gutterBottom variant="h5" component="h2">
                     {producto.name}
                   </Typography>
@@ -133,9 +142,17 @@ function GrillaDeProductos() {
             </Grid>
           ))}
       </Grid>
-      <Typography variant="h6" gutterBottom>
-        Total a pagar: €{totalSum()}
-      </Typography>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: "70px",
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          Total a pagar: €{totalSum()}
+        </Typography>
+      </div>
     </Container>
   );
 }

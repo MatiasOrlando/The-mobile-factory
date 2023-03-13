@@ -16,10 +16,12 @@ import { setUser } from "../../state/user";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { resetProducts } from "../../state/products";
+import toast, { Toaster } from "react-hot-toast";
+import Badge from "@mui/material/Badge";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
-
+  const products = useSelector((state) => state.products);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -44,68 +46,94 @@ const Navbar = () => {
 
   const theme = useTheme();
 
+  const addQty = () => {
+    const qtyItems = products.reduce(
+      (acc, product) => acc + product.shopQuantity,
+      0
+    );
+    return qtyItems;
+  };
+
+  const handleCartView = () => {
+    products.length < 1 &&
+      toast.error("No products added to cart yet", {
+        duration: "80",
+        style: {
+          background: "white",
+          color: "black",
+          opacity: ".3",
+        },
+      });
+  };
+
   return (
-    <React.Fragment>
-      <AppBar sx={{ background: "#063970" }}>
-        <Toolbar>
-          {user.id ? (
-            <Link to={"/carrito"}>
-              <ShoppingCartIcon sx={{ transform: "scale(1.5)" }} />{" "}
-            </Link>
-          ) : (
-            <StyledLink to={"/login"}>
-              <ShoppingCartIcon sx={{ transform: "scale(1.5)" }} />{" "}
-            </StyledLink>
-          )}
-          <>
-            <Tabs
-              sx={{ marginLeft: "auto" }}
-              indicatorColor="secondary"
-              textColor="inherit"
-              value={0}
-              onChange={(e, value) => setValue(value)}
-            >
-              <StyledLink to={"/"}>
-                <Tab href="/" label="home" />
+    <>
+      <React.Fragment>
+        <AppBar sx={{ background: "#063970" }}>
+          <Toolbar>
+            {user.id && (
+              <StyledLink to={products.length >= 1 ? "/carrito" : ""}>
+                <Badge badgeContent={addQty()} color="primary">
+                  <ShoppingCartIcon
+                    sx={{ transform: "scale(1.5)", color: "white" }}
+                    onClick={() => handleCartView()}
+                  />
+                </Badge>
               </StyledLink>
-
-              <Tab label="categories" />
-              <Tab label="sale" />
-            </Tabs>
-
-            {user.id ? (
-              <>
-                <div style={{ padding: "0px 20px 0px 20px ", display: "flex" }}>
-                  <Button
-                    onClick={() => handleClick()}
-                    sx={{ marginLeft: "auto" }}
-                    variant="contained"
-                  >
-                    Logout
-                  </Button>
-                  <Typography sx={{ marginLeft: "5px", marginTop: "5px" }}>
-                    {user.full_name}
-                  </Typography>
-                </div>
-              </>
-            ) : (
-              <>
-                <StyledLink to="/login">
-                  <Button sx={{ marginLeft: "auto" }} variant="contained">
-                    Login
-                  </Button>
-                </StyledLink>
-                <StyledLink to="/register">
-                  <Button sx={{ marginLeft: "10px" }} variant="contained">
-                    SignUp
-                  </Button>
-                </StyledLink>
-              </>
             )}
-          </>
-        </Toolbar>
-      </AppBar>
-    </React.Fragment>
+            <>
+              <Tabs
+                sx={{ marginLeft: "auto" }}
+                indicatorColor="secondary"
+                textColor="inherit"
+                value={0}
+                onChange={(e, value) => setValue(value)}
+              >
+                <StyledLink to={"/"}>
+                  <Tab href="/" label="home" sx={{ color: "white" }} />
+                </StyledLink>
+
+                <Tab label="categories" />
+                <Tab label="sale" />
+              </Tabs>
+
+              {user.id ? (
+                <>
+                  <div
+                    style={{ padding: "0px 20px 0px 20px ", display: "flex" }}
+                  >
+                    <Button
+                      onClick={() => handleClick()}
+                      sx={{ marginLeft: "auto" }}
+                      variant="contained"
+                    >
+                      Logout
+                    </Button>
+                    <Typography sx={{ marginLeft: "5px", marginTop: "5px" }}>
+                      {user.full_name}
+                    </Typography>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <StyledLink to="/login">
+                    <Button sx={{ marginLeft: "auto" }} variant="contained">
+                      Login
+                    </Button>
+                  </StyledLink>
+                  <StyledLink to="/register">
+                    <Button sx={{ marginLeft: "10px" }} variant="contained">
+                      SignUp
+                    </Button>
+                  </StyledLink>
+                </>
+              )}
+            </>
+          </Toolbar>
+        </AppBar>
+      </React.Fragment>
+      <Toaster />
+    </>
   );
 };
 
