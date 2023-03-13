@@ -14,8 +14,11 @@ carritoRouter.get("/:id", async (req, res) => {
       include: { model: Product },
     });
     if (!products.length)
-      return res.status(404).send("No existe ese usuario en la DB");
-    const arrProd = products.map((item) => item.dataValues.product.dataValues);
+      return res.send("No existe ese usuario en la DB/no tiene productos");
+    const arrProd = products.map((item) => {
+      item.dataValues.product.dataValues.shopQuantity = item.dataValues.quantity;
+      return item.dataValues.product.dataValues;
+    });
     res.send(arrProd);
   } catch (error) {
     console.error(error);
@@ -55,11 +58,15 @@ carritoRouter.post("/", async (req, res) => {
         {
           where: { customerId: customerId, productId: productId },
           returning: true,
-        }
+        },
       );
-      return res.status(201).send(updatedItem[0]);
+      const product = await Product.findByPk(updatedItem[0].dataValues.productId)
+      product.dataValues.shopQuantity = updatedItem[0].dataValues.quantity
+      return res.status(201).send(product);
     }
-    res.status(201).send(item);
+    const newProduct = await Product.findByPk(item.dataValues.productId)
+    newProduct.dataValues.shopQuantity = item.dataValues.quantity
+    res.status(201).send(newProduct);
   } catch (error) {
     console.error(error);
     res.status(404).send(error);
@@ -109,9 +116,14 @@ carritoRouter.put("/", async (req, res) => {
         returning: true,
       }
     );
-    index
-      ? res.send(updatedItem[0])
-      : res.status(404).send("Relación usuario/producto inexistente");
+    if (index) {
+      const product = await Product.findByPk(updatedItem[0].dataValues.productId)
+      product.dataValues.shopQuantity = updatedItem[0].dataValues.quantity
+      return res.status(201).send(product);
+    } else {
+      return res.status(404).send("Relación usuario/producto inexistente");
+    }
+
   } catch (error) {
     console.error(error);
     res.status(404).send(error);

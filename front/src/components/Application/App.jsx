@@ -10,21 +10,29 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../state/user";
 import CardItem from "../../commons/Card/Card";
 import ShoppingCart from "../../commons/ ShoppingCart/ShoppingCart";
-import { cartProducts } from "../../state/products";
+import { cartProducts, loginProducts } from "../../state/products";
 
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useEffect(async () => {
     const userPersist = JSON.parse(localStorage.getItem("user")) || {};
-    const cartPersist = JSON.parse(localStorage.getItem("cart")) || [];
     dispatch(setUser(userPersist));
-    if (cartPersist.length) {
-      cartPersist.forEach((item) => {
-        dispatch(cartProducts(item));
-      });
+    try {
+      if (userPersist.id) {
+        const userCart = await axios.get(`http://localhost:3001/carrito/${userPersist.id}`)
+        if (typeof userCart.data !== "string") {
+          dispatch(loginProducts(userCart.data));
+        } else {
+          dispatch(loginProducts([]))
+        }
+        
+      }
+    } catch (error) {
+      console.error(error)
     }
+    
   }, []);
 
   return (
