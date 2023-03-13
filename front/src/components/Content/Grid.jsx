@@ -6,10 +6,11 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
 import "./Content.css";
-import { Button, Card } from "@mui/material";
+import { Card } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { cartProducts } from "../../state/products";
+import AppPagination from "../AppPagination/AppPagination";
 
 const Img = styled("img")({
   margin: "auto",
@@ -23,18 +24,21 @@ const StyledLink = styled(Link)({
 
 function Grilla() {
   const [devices, setDevices] = useState([]);
+  const [page, setPage] = useState(50);
   const dispatch = useDispatch();
 
   const cart = useSelector((state) => state.products);
 
   useEffect(() => {
     async function fetchDevices() {
-      const response = await fetch("http://localhost:3001/products");
+      const response = await fetch(
+        `http://localhost:3001/products?page=${page}`
+      );
       const data = await response.json();
       setDevices(data);
     }
     fetchDevices();
-  }, []);
+  }, [page]);
 
   return (
     <Paper
@@ -130,6 +134,7 @@ function Grilla() {
           </Grid>
         ))}
       </Grid>
+      <AppPagination setPage={setPage} />
     </Paper>
   );
 }

@@ -17,6 +17,7 @@ import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { resetProducts } from "../../state/products";
 
+
 const Navbar = () => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -43,7 +44,6 @@ const Navbar = () => {
   };
 
   const theme = useTheme();
-  console.log(theme);
 
   return (
     <React.Fragment>
