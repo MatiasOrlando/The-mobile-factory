@@ -19,7 +19,7 @@ const mappedArray = (array) => {
     };
     return newObj;
   });
-  return test;
+  return test.slice(0, 12);
 };
 
 module.exports = mappedArray;
