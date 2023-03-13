@@ -10,20 +10,36 @@ import axios from "axios";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { cartProducts } from "../../state/products";
 
 function CardItem() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [phone, setPhone] = useState({});
+  const user = useSelector((state) => state.user);
+  const [stockItem, setStockItem] = useState(false);
+
+  const handleCarrito = async (device) => {
+    try {
+      const productAdded = await axios.post(`http://localhost:3001/carrito`, {
+        productId: Number(device.id),
+        customerId: Number(user.id),
+        productQuantity: 1,
+      });
+      dispatch(cartProducts(productAdded.data));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     axios.get(`http://localhost:3001/products/${id}`).then((data) => {
       setPhone(data);
     });
   }, [id]);
   if (phone.data === undefined) {
-    ("not dta");
+    ("not data");
   } else {
     return (
       <Box
@@ -92,11 +108,11 @@ function CardItem() {
                 sx={{ display: "flex", justifyContent: "space-evenly" }}
               >
                 <Button
+                  disabled={phone.data.stock ? false : true}
                   size="small"
                   color="primary"
                   onClick={() => {
-                    console.log(phone);
-                    dispatch(cartProducts(phone.data));
+                    handleCarrito(phone.data);
                   }}
                 >
                   Añadir al carrito
