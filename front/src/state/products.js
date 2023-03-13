@@ -3,6 +3,7 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 export const cartProducts = createAction("CART_PRODUCTS");
 export const addToCart = createAction("ADD_TO_CART");
 export const removeFromCart = createAction("REMOVE_FROM_CART");
+export const resetProducts = createAction("RESET_PRODUCTS");
 
 const initialstate = [];
 
@@ -11,6 +12,9 @@ const reducer = createReducer(initialstate, {
     state.push(action.payload);
     localStorage.setItem("cart", JSON.stringify(state));
     return state;
+  },
+  [resetProducts]: (state, action) => {
+    return initialstate;
   },
   [addToCart]: (state, action) => {
     if (

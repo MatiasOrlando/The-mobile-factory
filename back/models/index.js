@@ -10,7 +10,23 @@ Customer.hasMany(Order);
 Product.belongsTo(Brand);
 Brand.hasMany(Product);
 
-Product.belongsToMany(Customer, { through: { model: Carrito, unique: false } });
-Customer.belongsToMany(Product, { through: { model: Carrito, unique: false } });
+Product.belongsToMany(Customer, {
+  through: {
+    model: Carrito,
+    unique: false,
+    foreignKey: "productId",
+    otherKey: "customerId",
+  },
+});
+Customer.belongsToMany(Product, {
+  through: {
+    model: Carrito,
+    unique: false,
+    foreignKey: "customerId",
+    otherKey: "productId",
+  },
+});
+Carrito.belongsTo(Product, { foreignKey: "productId" });
+Carrito.belongsTo(Customer, { foreignKey: "customerId" });
 
 module.exports = { Brand, Carrito, Customer, Product };

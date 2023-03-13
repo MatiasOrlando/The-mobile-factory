@@ -14,6 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setUser } from "../../state/user";
 import { styled } from "@mui/material/styles";
+import axios from "axios";
+import { resetProducts } from "../../state/products";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
@@ -25,13 +27,15 @@ const Navbar = () => {
   });
   const handleClick = async () => {
     try {
-      localStorage.removeItem("user");
-      dispatch(setUser({}));
+      
       await axios.post(
-        "http://127.0.0.1:3001/users/logout",
+        "http://localhost:3001/users/logout",
         {},
         { withCredentials: true }
       );
+      localStorage.removeItem("user");
+      dispatch(setUser({}));
+      dispatch(resetProducts([]));
       navigate("/login");
     } catch (error) {
       console.error(error);
