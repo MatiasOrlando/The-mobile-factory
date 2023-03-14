@@ -18,15 +18,9 @@ import { useNavigate } from "react-router-dom";
 function GrillaDeProductos() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [total, setTotal] = useState(0);
-  const [carrito, setCarrito] = useState([]);
 
   const products = useSelector((state) => state.products);
   const user = useSelector((state) => state.user);
-
-  /*  useEffect(() => {
-    setCarrito(products);
-  }, [products]) */
 
   async function suma(producto) {
     if (producto.shopQuantity < producto.stock) {
@@ -94,6 +88,8 @@ function GrillaDeProductos() {
                   display: "flex",
                   flexDirection: "column",
                   maxWidth: 260,
+
+                  justifyContent: "space-between",
                 }}
               >
                 <CardMedia
