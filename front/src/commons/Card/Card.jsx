@@ -18,7 +18,6 @@ function CardItem() {
   const { id } = useParams();
   const [phone, setPhone] = useState({});
   const user = useSelector((state) => state.user);
-  const [stockItem, setStockItem] = useState(false);
 
   const handleCarrito = async (device) => {
     try {
