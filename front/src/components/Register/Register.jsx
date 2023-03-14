@@ -10,6 +10,7 @@ import {
   Grid,
   TextField,
   Button,
+  Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -22,8 +23,71 @@ export const Register = () => {
   const [billing_address, setAddress] = useState("");
   const [country, setCountry] = useState("");
 
+  // Input Error
+
+  const [fullnamelError, setFullnameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+
+  // Validation for OnBlur fullname
+
+  const handleFullname = (e) => {
+    e.preventDefault();
+    if (!full_name || full_name.length <= 4) {
+      setFullnameError(true);
+      return;
+    }
+    setFullnameError(false);
+  };
+
+  // Email Validation
+  const isEmail = (email) =>
+    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
+
+  // Validation for OnBlur email
+
+  const handleEmail = () => {
+    if (!isEmail(email)) {
+      setEmailError(true);
+      return;
+    }
+    setEmailError(false);
+  };
+
+  // Validation for OnBlur password
+
+  const handlePassword = (e) => {
+    e.preventDefault();
+    if (!password || password.length <= 4) {
+      setPasswordError(true);
+      return;
+    }
+    setPasswordError(false);
+  };
+
+  //Validation Form State
+
+  const [formValid, setFormValid] = useState();
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!password || password.length < 4) {
+      setFormValid("La contraseña debe tener mas de 4 caracteres");
+      return;
+    }
+    if (!full_name || full_name.length < 4) {
+      setFormValid("Por favor ingresa tu nombre completo");
+      return;
+    }
+    if (!phone || phone.length < 4) {
+      setFormValid("Por favor ingresa tu numero completo");
+      return;
+    }
+    if (emailError) {
+      setFormValid("Por favor ingresa tu email correctamente");
+      return;
+    }
+
     axios
       .post("http://localhost:3001/users/register", {
         full_name,
@@ -36,39 +100,10 @@ export const Register = () => {
       })
       .then((res) => {
         console.log("Usuario creado", res.data);
+        setFormValid();
         navigate("/login");
       })
       .catch((err) => console.log("Error de registro", err));
-  };
-
-  const handleChangeFullName = (e) => {
-    e.preventDefault();
-    setFullname(e.target.value);
-  };
-
-  const handleChangeEmail = (e) => {
-    e.preventDefault();
-    setEmail(e.target.value);
-  };
-
-  const handleChangePassword = (e) => {
-    e.preventDefault();
-    setPassword(e.target.value);
-  };
-
-  const handleChangePhone = (e) => {
-    e.preventDefault();
-    setPhone(e.target.value);
-  };
-
-  const handleChangeAdress = (e) => {
-    e.preventDefault();
-    setAddress(e.target.value);
-  };
-
-  const handleChangeCountry = (e) => {
-    e.preventDefault();
-    setCountry(e.target.value);
   };
 
   return (
@@ -84,32 +119,36 @@ export const Register = () => {
         <Avatar style={{ alignSelf: "center" }}>
           <Login />
         </Avatar>
+        <Typography
+          variant="h4"
+          align="center"
+          style={{ marginBottom: "3rem" }}
+        >
+          Registro
+        </Typography>
         <form style={{ maxWidth: "100%" }} onSubmit={handleSubmit}>
-          <Typography
-            variant="h4"
-            align="center"
-            style={{ marginBottom: "3rem" }}
-          >
-            Register
-          </Typography>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
                 value={full_name}
-                onChange={handleChangeFullName}
+                error={fullnamelError}
+                onBlur={handleFullname}
+                onChange={(e) => setFullname(e.target.value)}
                 variant="outlined"
-                required
+                required="true"
                 fullWidth
-                placeholder="Fullname"
+                placeholder="Nombre Completo"
                 type="text"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 value={email}
-                onChange={handleChangeEmail}
+                error={emailError}
+                onBlur={handleEmail}
+                onChange={(e) => setEmail(e.target.value)}
+                required="true"
                 variant="outlined"
-                required
                 fullWidth
                 placeholder="Email"
                 type="email"
@@ -118,44 +157,48 @@ export const Register = () => {
             <Grid item xs={6} sm={6}>
               <TextField
                 value={password}
-                onChange={handleChangePassword}
+                error={passwordError}
+                onBlur={handlePassword}
+                onChange={(e) => setPassword(e.target.value)}
                 variant="outlined"
-                required
+                required="true"
                 fullWidth
-                placeholder="Password"
+                placeholder="Contraseña"
                 type="password"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 value={phone}
-                onChange={handleChangePhone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                }}
                 variant="outlined"
-                required
+                required="true"
                 fullWidth
-                placeholder="Phone"
+                placeholder="Teléfono"
                 type="number"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 value={billing_address}
-                onChange={handleChangeAdress}
+                onChange={(e) => setAddress(e.target.value)}
                 variant="outlined"
-                required
+                required="true"
                 fullWidth
-                placeholder="Address"
+                placeholder="Dirección"
                 type="text"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 value={country}
-                onChange={handleChangeCountry}
+                onChange={(e) => setCountry(e.target.value)}
                 variant="outlined"
-                required
+                required="true"
                 fullWidth
-                placeholder="Country"
+                placeholder="País"
                 type="text"
               />
             </Grid>
@@ -163,12 +206,13 @@ export const Register = () => {
 
           <Button
             style={{ marginTop: "1rem" }}
-            fullWidth
-            color="primary"
+            variant="contained"
             type="submit"
+            fullWidth
           >
-            Sign Up
+            registrarse
           </Button>
+          <p>{formValid && <Alert severity="error">{formValid}</Alert>}</p>
         </form>
       </Paper>
     </Container>

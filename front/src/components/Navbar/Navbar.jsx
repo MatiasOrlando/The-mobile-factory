@@ -86,14 +86,14 @@ const Navbar = () => {
                 sx={{ marginLeft: "auto" }}
                 indicatorColor="secondary"
                 textColor="inherit"
-                value={0}
-                onChange={(e, value) => setValue(value)}
+                // value={0}
+                // onChange={(e, value) => setValue(value)}
               >
                 <StyledLink to={"/"}>
-                  <Tab href="/" label="home" sx={{ color: "white" }} />
+                  <Tab label="home" sx={{ color: "white" }} />
                 </StyledLink>
 
-                <Tab label="categories" />
+                <Tab label="marcas" />
                 <Tab label="sale" />
               </Tabs>
 
@@ -104,14 +104,18 @@ const Navbar = () => {
                   >
                     <Button
                       onClick={() => handleClick()}
+                      sx={{ marginRight: "2%" }}
+                      variant="contained"
+                    >
+                      {user.full_name}
+                    </Button>
+                    <Button
+                      onClick={() => handleClick()}
                       sx={{ marginLeft: "auto" }}
                       variant="contained"
                     >
-                      Logout
+                      logout
                     </Button>
-                    <Typography sx={{ marginLeft: "5px", marginTop: "5px" }}>
-                      {user.full_name}
-                    </Typography>
                   </div>
                 </>
               ) : (
@@ -123,7 +127,7 @@ const Navbar = () => {
                   </StyledLink>
                   <StyledLink to="/register">
                     <Button sx={{ marginLeft: "10px" }} variant="contained">
-                      SignUp
+                      registro
                     </Button>
                   </StyledLink>
                 </>
