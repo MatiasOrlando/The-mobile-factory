@@ -4,19 +4,26 @@ const Product = require("../models/Product");
 class ProductsService {
   static async fetchAllProducts(page) {
     try {
-      const res = await axios.get(
-        `https://api.device-specs.io/api/smartphones?populate=*&sort=general_year:desc&pagination[page]=${parseInt(
-          page
-        )}&pagination[pageSize]=12`,
-        {
-          method: "GET",
-          headers: {
-            Authorization:
-              "bearer 6c07431327b5d39c2c30a1cfd7ad0b295afce5acc8cf7c72b5a933cd6ddb8fd7e1790c633a329b705583479bf4f7fab77e77f02fee14e998e8bb9d79bacc1773a5e5233daea6ec639d9ab60e196641da43ca9b3174d8ce4d9c0e3948a14446afe4a07cdf63f9108681fb1491a5d61939d2283876e9fe588f64e86ffac845cb85",
-          },
-        }
-      );
-      return { error: false, data: res.data.data };
+      const productsInDb = await Product.findAll();
+      const arrayProdsDB = productsInDb.map((obj) => obj.dataValues);
+      if (arrayProdsDB.length < 12 && arrayProdsDB.length) {
+        const res = arrayProdsDB;
+        return { error: false, data: res };
+      } else {
+        const res = await axios.get(
+          `https://api.device-specs.io/api/smartphones?populate=*&sort=general_year:desc&pagination[page]=${parseInt(
+            page
+          )}&pagination[pageSize]=12`,
+          {
+            method: "GET",
+            headers: {
+              Authorization:
+                "bearer 6c07431327b5d39c2c30a1cfd7ad0b295afce5acc8cf7c72b5a933cd6ddb8fd7e1790c633a329b705583479bf4f7fab77e77f02fee14e998e8bb9d79bacc1773a5e5233daea6ec639d9ab60e196641da43ca9b3174d8ce4d9c0e3948a14446afe4a07cdf63f9108681fb1491a5d61939d2283876e9fe588f64e86ffac845cb85",
+            },
+          }
+        );
+        return { error: false, data: res.data.data };
+      }
     } catch (error) {
       return { error: true, data: error };
     }
