@@ -1,14 +1,16 @@
 const axios = require("axios");
 const Product = require("../models/Product");
+const mappedArray = require("../config/dataFetch");
 
 class ProductsService {
   static async fetchAllProducts(page) {
     try {
       const productsInDb = await Product.findAll();
-      const arrayProdsDB = productsInDb.map((obj) => obj.dataValues);
-      if (arrayProdsDB.length < 12 && arrayProdsDB.length) {
-        const res = arrayProdsDB;
-        return { error: false, data: res };
+      const arrayProdsDB = productsInDb
+        .map((obj) => obj.dataValues)
+        .filter((el) => el.page == parseInt(page));
+      if (arrayProdsDB.length && arrayProdsDB.length > 0) {
+        return { error: false, newArr: arrayProdsDB };
       } else {
         const res = await axios.get(
           `https://api.device-specs.io/api/smartphones?populate=*&sort=general_year:desc&pagination[page]=${parseInt(
@@ -22,7 +24,8 @@ class ProductsService {
             },
           }
         );
-        return { error: false, data: res.data.data };
+        const newArr = mappedArray(res.data.data, page);
+        return { error: false, newArr };
       }
     } catch (error) {
       return { error: true, data: error };

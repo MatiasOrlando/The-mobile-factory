@@ -26,7 +26,7 @@ const StyledLink = styled(Link)({
 
 function Grilla() {
   const [devices, setDevices] = useState([]);
-  const [page, setPage] = useState(104);
+  const [page, setPage] = useState(130);
   const [stockItem, setStockItem] = useState(false);
   const dispatch = useDispatch();
 

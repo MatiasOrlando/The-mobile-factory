@@ -3,7 +3,7 @@ import Pagination from "@mui/material/Pagination";
 
 const AppPagination = ({ setPage }) => {
   const handleChange = (page) => {
-    setPage(parseInt(page) + 103);
+    setPage(parseInt(page) + 129);
     window.scrollTo(0, 0);
   };
 

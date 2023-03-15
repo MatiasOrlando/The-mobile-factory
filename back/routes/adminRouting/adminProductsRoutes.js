@@ -6,7 +6,7 @@ adminProductsRoutes.delete("/delete-product", async (req, res) => {
   // Me envian por body el id del producto y el id del usuario que quiere borrar dicho producto para validar sus privilegios
   // const {idProduct , id} = req.body
   const id = 1;
-  const idProduct = 556;
+  const idProduct = 645;
   try {
     const userPrivileged = await Customer.findByPk(id);
     const productToDelete = await Product.findByPk(idProduct);
@@ -73,7 +73,7 @@ adminProductsRoutes.put("/edit-product", async (req, res) => {
   // Idealmente recibir los ids de producto y usuario por req.query
   // Debo recibir por body el nuevo contenido de dicho producto a editar.
   const idUser = 1;
-  const idProduct = 3;
+  const idProduct = 639;
   const name = "Nokia 1100";
   const price = "10€";
   const color = "space-grey";
