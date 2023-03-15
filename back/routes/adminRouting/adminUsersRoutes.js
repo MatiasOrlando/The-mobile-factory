@@ -1,14 +1,14 @@
 const express = require("express");
-const { Customer } = require("../models");
-const adminRouter = express.Router();
-const mappedUsers = require("../config/infoUsers");
+const { Customer } = require("../../models");
+const adminUsersRoutes = express.Router();
+const mappedUsers = require("../../config/infoUsers");
 
-adminRouter.put("/add", async (req, res) => {
+adminUsersRoutes.put("/add", async (req, res) => {
   // NECESITO ID USUARIO OWNER Y EMAIL DEL USUARIO A CONVERTIR EN ADM
   // Se verifica primero con el ID que el usuario sea OWNER/ADM GOD para realizar cambios y luego ejecuta.
-  // const {id, email} = req.body
+  // const {id, emailUser} = req.body
   const id = 1;
-  const email = "dai@gmail.com";
+  const email = "mat@gmail.com";
   try {
     const validEmail = await Customer.findOne({ where: { email } });
     const userOwner = await Customer.findByPk(id);
@@ -30,7 +30,7 @@ adminRouter.put("/add", async (req, res) => {
   }
 });
 
-adminRouter.get("/getAllUsers", async (req, res) => {
+adminUsersRoutes.get("/getUsers", async (req, res) => {
   // NECESITO ID USUARIO OWNER O ADMIN para verificar que pueda ver todos los usuarios por query
   // const {id} = req.query
   const id = 1;
@@ -50,4 +50,38 @@ adminRouter.get("/getAllUsers", async (req, res) => {
   }
 });
 
-module.exports = adminRouter;
+adminUsersRoutes.delete("/deleteUser", async (req, res) => {
+  // NECESITO ID USUARIO OWNER Y EMAIL DEL USUARIO A BORRAR
+  // Se verifica primero con el ID que el usuario sea OWNER/ADM GOD para realizar cambios y luego ejecuta.
+  // const {id, emailUsuarioABorrar} = req.body
+  const id = 4;
+  const email = "dai@gmail.com";
+  try {
+    const validUserToDelete = await Customer.findOne({ where: { email } });
+    const userPrivileged = await Customer.findByPk(id);
+    if (
+      (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) &&
+      validUserToDelete
+    ) {
+      if (
+        userPrivileged.dataValues.admin &&
+        validUserToDelete.dataValues.admin
+      ) {
+        res
+          .status(404)
+          .send(`You must have owner privileges to delete another admin`);
+      } else {
+        await Customer.destroy({ where: { email } });
+        res.status(201).send(mappedUsers([validUserToDelete]));
+      }
+    } else {
+      !validEmail
+        ? res.status(404).send(`User's email not found`)
+        : res.status(404).send(`You must have owner privileges`);
+    }
+  } catch (error) {
+    throw new Error(`Currently unavailable to delete user: ${error}`);
+  }
+});
+
+module.exports = adminUsersRoutes;

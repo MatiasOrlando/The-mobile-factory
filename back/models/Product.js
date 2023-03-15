@@ -51,6 +51,9 @@ Product.init(
       type: S.INTEGER,
       allowNull: false,
     },
+    page: {
+      type: S.INTEGER,
+    },
   },
   {
     sequelize: db,

@@ -1,4 +1,4 @@
-const mappedArray = (array) => {
+const mappedArray = (array, page) => {
   const test = array.map((cellphone) => {
     const newObj = {
       api_id: cellphone.id,
@@ -16,6 +16,7 @@ const mappedArray = (array) => {
       storage: cellphone.main.storage_capacity__gb + "gb" || "64gb",
       amountCores: cellphone.main.cpu_number_of_cores || "4",
       stock: Math.floor(Math.random() * 10),
+      page: parseInt(page),
     };
     return newObj;
   });
