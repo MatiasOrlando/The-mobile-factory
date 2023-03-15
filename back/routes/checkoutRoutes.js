@@ -1,7 +1,8 @@
 const express = require("express");
-const { Product, Carrito, Customer, Order } = require("../models");
+const { Carrito, Customer, Order } = require("../models");
 const checkoutRouter = express.Router();
-let nodemailer = require("nodemailer")
+const sendEmail = require("../config/orderMail");
+
 
 checkoutRouter.post("/addOrder", async (req, res) => {
     try {
@@ -38,6 +39,10 @@ checkoutRouter.post("/addOrder", async (req, res) => {
                 customerId: id
             }
         })
+
+        if (order) {
+            sendEmail(total, billing_address, email)
+        }
         res.send(order)
     } catch (error) {
         console.log(`Error`, error);
@@ -45,50 +50,44 @@ checkoutRouter.post("/addOrder", async (req, res) => {
 })
 
 checkoutRouter.get("/ordersUser/:customerId", async (req, res) => {
+    //:customerId , es el usuario al cual que se quiere ver su historial de orders
+    //req.body.id , es el id para verificar si el que pide ese historial es admin/owner
     try {
-        const id = req.params.customerId
+        const theId = req.body.id;
+        const adminOrOwner = await Customer.findOne({
+            where: {
+                id: theId
+            }
+        });
+
+        if (!adminOrOwner.admin && !adminOrOwner.owner) return res.status(404).send("You must be admin or owner")
+
+        const id = req.params.customerId;
+
+        const userCheck = await Customer.findOne({
+            where: {
+                id: id
+            }
+        });
+
+        if (!userCheck) return res.status(404).send("user does not exist")
+
+        if (userCheck.admin || userCheck.owner) return res.status(404).send("info of another admin/owner not available")
+
         const orders = await Order.findAll({
             where: {
                 customerId: id
             }
         })
+
         if (!orders.length) return res.status(404).send("Invalid id user")
+
         res.send(orders)
+
     } catch (error) {
         console.log(error);
     }
 })
 
-checkoutRouter.post("/sendEmail", async (req, res) => {
-    console.log("post email");
-
-    try {
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            host: "smtp.gmail.com",
-            port: 587,
-            auth: {
-                user: "german.1990.cuevas@gmail.com",
-                pass: "dogrxpheupvimthi"
-            }
-        })
-        await transporter.sendMail({
-            from: "german.1990.cuevas@gmail.com",
-            to: "german.1990.cuevas@gmail.com",
-            subject: "hola",
-            text: "hola mundo",
-        })
-        res.status(200).send("email sent successfully");
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("something is wrong with the mail delivery")
-    }
-
-
-
-
-
-
-})
 
 module.exports = checkoutRouter;
