@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { cartProducts } from "../../state/products";
 import AppPagination from "../AppPagination/AppPagination";
 import axios from "axios";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 
 const Img = styled("img")({
   margin: "auto",
@@ -27,7 +27,8 @@ const StyledLink = styled(Link)({
 function Grilla() {
   const [devices, setDevices] = useState([]);
   const [page, setPage] = useState(130);
-  const [stockItem, setStockItem] = useState(false);
+  const [pagination, setPagination] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
   const cart = useSelector((state) => state.products);
@@ -35,11 +36,14 @@ function Grilla() {
 
   useEffect(() => {
     async function fetchDevices() {
+      setIsLoading(true);
       const response = await fetch(
         `http://localhost:3001/products?page=${page}`
       );
       const data = await response.json();
       setDevices(data);
+      setIsLoading(false);
+      setPagination(true)
     }
     fetchDevices();
   }, [page]);
@@ -58,7 +62,8 @@ function Grilla() {
   };
 
   return (
-    <Paper
+    
+     <Paper
       sx={{
         p: 2,
         margin: "auto",
@@ -68,6 +73,11 @@ function Grilla() {
           theme.palette.mode === "dark" ? "#1A2027" : "#fff",
       }}
     >
+      {isLoading ? (
+        <Grid container justifyContent="center">
+          <CircularProgress sx={{marginTop:"10%"}} />
+        </Grid>
+      ) :(
       <Grid container spacing={6} sx={{ marginTop: "5%" }}>
         {devices.map((device) => (
           <Grid item xs={6} sm={3} md={3} lg={3} xl={3} key={device.id}>
@@ -155,7 +165,8 @@ function Grilla() {
           </Grid>
         ))}
       </Grid>
-      <AppPagination setPage={setPage} />
+      )}
+      {pagination && <AppPagination setPage={setPage} setPagination={setPagination} />}
     </Paper>
   );
 }
