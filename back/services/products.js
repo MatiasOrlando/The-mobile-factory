@@ -24,6 +24,7 @@ class ProductsService {
             },
           }
         );
+
         const newArr = mappedArray(res.data.data, page);
         return { error: false, newArr };
       }
