@@ -18,6 +18,8 @@ import axios from "axios";
 import { resetProducts } from "../../state/products";
 import toast, { Toaster } from "react-hot-toast";
 import Badge from "@mui/material/Badge";
+import HistoryIcon from '@mui/icons-material/History';
+import { margin } from "@mui/system";
 import { resetCategories } from "../../state/categories";
 
 const Navbar = () => {
@@ -102,7 +104,11 @@ const Navbar = () => {
                 <StyledLink to={"/"}>
                   <Tab label="home" sx={{ color: "white" }} />
                 </StyledLink>
-
+                <StyledLink to={"/shopping-history"} sx={{display:"flex", alignItems:"center"}}>
+                  <HistoryIcon sx={{ color: "white", width:"0.85em"}}/>
+                <Tab label="Historial" sx={{ color: "white", paddingLeft:0.5}}/>
+                
+                </StyledLink>
                 <Tab label="marcas" />
                 <Tab label="sale" />
               </Tabs>
