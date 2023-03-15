@@ -20,4 +20,8 @@ Brand.init(
   }
 );
 
+Brand.addHook("beforeCreate", (brand) => {
+  return (brand.name = brand.name.toLowerCase());
+});
+
 module.exports = Brand;
