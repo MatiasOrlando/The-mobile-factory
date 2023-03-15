@@ -18,6 +18,9 @@ import axios from "axios";
 import { resetProducts } from "../../state/products";
 import toast, { Toaster } from "react-hot-toast";
 import Badge from "@mui/material/Badge";
+import HistoryIcon from '@mui/icons-material/History';
+import { margin } from "@mui/system";
+import { resetCategories } from "../../state/categories";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
@@ -38,6 +41,7 @@ const Navbar = () => {
       localStorage.removeItem("user");
       dispatch(setUser({}));
       dispatch(resetProducts([]));
+      dispatch(resetCategories([]));
       navigate("/login");
     } catch (error) {
       console.error(error);
@@ -81,18 +85,30 @@ const Navbar = () => {
                 </Badge>
               </StyledLink>
             )}
+            {/* Voy a necesitar que el back pueda darme un usuario como admin o owner */}
+            {
+              /* user.admin || user.owner */
+              user.id && (
+                <StyledLink to={"/categorias"}>
+                  <Tab label="categorias(admin)" sx={{ color: "white" }} />
+                </StyledLink>
+              )
+            }
             <>
               <Tabs
                 sx={{ marginLeft: "auto" }}
                 indicatorColor="secondary"
                 textColor="inherit"
-                // value={0}
-                // onChange={(e, value) => setValue(value)}
+                value={0}
               >
                 <StyledLink to={"/"}>
                   <Tab label="home" sx={{ color: "white" }} />
                 </StyledLink>
-
+                <StyledLink to={"/shopping-history"} sx={{display:"flex", alignItems:"center"}}>
+                  <HistoryIcon sx={{ color: "white", width:"0.85em"}}/>
+                <Tab label="Historial" sx={{ color: "white", paddingLeft:0.5}}/>
+                
+                </StyledLink>
                 <Tab label="marcas" />
                 <Tab label="sale" />
               </Tabs>

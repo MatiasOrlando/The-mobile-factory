@@ -1,6 +1,7 @@
 const mappedUsers = (array) => {
   const dataUsers = array.map((user) => {
     newObj = {
+      id: user.id,
       email: user.email,
       full_name: user.full_name,
       billing_address: user.billing_address,

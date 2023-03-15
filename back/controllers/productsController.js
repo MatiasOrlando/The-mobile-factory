@@ -5,8 +5,9 @@ const listAllProducts = async (req, res) => {
   const { page } = req.query;
   try {
     const arrayProducts = await ProductsService.fetchAllProducts(page);
-    const newArr = mappedArray(arrayProducts.data);
-    const productsDb = await ProductsService.productCreation(newArr);
+    const productsDb = await ProductsService.productCreation(
+      arrayProducts.newArr
+    );
     res.status(200).send(productsDb);
   } catch (error) {
     res.status(404).send(`DATA NOT AVAILABLE : ${error}`);
