@@ -12,6 +12,7 @@ import CardItem from "../../commons/Card/Card";
 import ShoppingCart from "../../commons/ ShoppingCart/ShoppingCart";
 import { cartProducts, loginProducts } from "../../state/products";
 import ShoppingHistory from "../ShoppingHistory/ShoppingHistory";
+import AdmCategories from "../AdmCategories/AdmCategories";
 
 function App() {
   const navigate = useNavigate();
@@ -47,10 +48,8 @@ function App() {
         <Route path="/detail/:id" element={<CardItem />} />
         <Route path="/shopping-history" element={<ShoppingHistory />} />
         <Route path="/" element={<Grilla />} />
-        {/* <Route
-          path="/"
-          element={<button onClick={() => handleClick()}>LOGOUT</button>}
-        /> */}
+        <Route path="/categorias" element={<AdmCategories />} />
+        
       </Routes>
     </div>
   );
