@@ -21,6 +21,7 @@ import Badge from "@mui/material/Badge";
 import HistoryIcon from '@mui/icons-material/History';
 import { margin } from "@mui/system";
 import { resetCategories } from "../../state/categories";
+import { resetAllP } from "../../state/allProducts";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
@@ -42,6 +43,7 @@ const Navbar = () => {
       dispatch(setUser({}));
       dispatch(resetProducts([]));
       dispatch(resetCategories([]));
+      dispatch(resetAllP([]));
       navigate("/login");
     } catch (error) {
       console.error(error);
@@ -91,6 +93,14 @@ const Navbar = () => {
               user.id && (
                 <StyledLink to={"/categorias"}>
                   <Tab label="categorias(admin)" sx={{ color: "white" }} />
+                </StyledLink>
+              )
+            }
+            {
+              /* user.admin || user.owner */
+              user.id && (
+                <StyledLink to={"/productos"}>
+                  <Tab label="productos(admin)" sx={{ color: "white" }} />
                 </StyledLink>
               )
             }
