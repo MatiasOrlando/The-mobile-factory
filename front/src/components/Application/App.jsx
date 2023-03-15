@@ -13,6 +13,8 @@ import ShoppingCart from "../../commons/ ShoppingCart/ShoppingCart";
 import { cartProducts, loginProducts } from "../../state/products";
 import ShoppingHistory from "../ShoppingHistory/ShoppingHistory";
 import AdmCategories from "../AdmCategories/AdmCategories";
+import AdminView from "../Admin/AdminView";
+import ListSearch from "../ListSearch/ListSearch";
 
 function App() {
   const navigate = useNavigate();
@@ -47,6 +49,8 @@ function App() {
         <Route path="/grilla" element={<Grilla />} />
         <Route path="/detail/:id" element={<CardItem />} />
         <Route path="/shopping-history" element={<ShoppingHistory />} />
+        <Route path="/admin" element={<AdminView />} />
+        <Route path="/search" element={<ListSearch />} />
         <Route path="/" element={<Grilla />} />
         <Route path="/categorias" element={<AdmCategories />} />
         
