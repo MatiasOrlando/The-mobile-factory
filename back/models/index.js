@@ -29,4 +29,4 @@ Customer.belongsToMany(Product, {
 Carrito.belongsTo(Product, { foreignKey: "productId" });
 Carrito.belongsTo(Customer, { foreignKey: "customerId" });
 
-module.exports = { Brand, Carrito, Customer, Product };
+module.exports = { Brand, Carrito, Customer, Product, Order };
