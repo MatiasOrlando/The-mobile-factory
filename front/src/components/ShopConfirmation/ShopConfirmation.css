@@ -1,0 +1,22 @@
+#probando8:focus {
+    outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.cards {
+    transition: 1s;
+    top: 10px;
+  right: 10px;
+  height: 30px;
+}
+
+.cardsOff {
+    transition: 1s;
+    top: 10px;
+  right: 10px;
+  height: 30px;
+  opacity: 0.4;
+  margin: 10px;
+  
+}

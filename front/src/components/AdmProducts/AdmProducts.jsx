@@ -137,20 +137,20 @@ const AdmProducts = () => {
     },
     {
       field: "display_size",
-      headerName: "Size",
-      width: 50,
-      editable: true,
-    },
-    {
-      field: "storage",
-      headerName: "Storage",
+      headerName: "Pantalla",
       width: 80,
       editable: true,
     },
     {
+      field: "storage",
+      headerName: "Almacenamiento",
+      width: 120,
+      editable: true,
+    },
+    {
       field: "amountCores",
-      headerName: "Cores",
-      width: 50,
+      headerName: "Núcleos",
+      width: 70,
       editable: true,
     },
     {
