@@ -1,6 +1,7 @@
 const axios = require("axios");
 const Product = require("../models/Product");
 const mappedArray = require("../config/dataFetch");
+const { Brand } = require("../models");
 
 class ProductsService {
   static async fetchAllProducts(page) {
@@ -24,6 +25,7 @@ class ProductsService {
             },
           }
         );
+
         const newArr = mappedArray(res.data.data, page);
         return { error: false, newArr };
       }
@@ -32,17 +34,36 @@ class ProductsService {
     }
   }
   static async productCreation(arrProducts) {
+    arrProducts.map(async (cellphone) => {
+      try {
+        const [newBrand, isCreated] = await Brand.findOrCreate({
+          where: { name: cellphone.name.split(" ")[0].toLowerCase() },
+          defaults: { name: cellphone.name.split(" ")[0].toLowerCase() },
+        });
+        return newBrand.dataValues;
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    const allBrands = await Brand.findAll();
+    const arrayBrands = allBrands.map((obj) => obj.dataValues);
     const arrayDbProducts = arrProducts.map(async (cellphone) => {
       try {
         const [item, created] = await Product.findOrCreate({
           where: { api_id: cellphone.api_id },
           defaults: cellphone,
         });
+        arrayBrands.forEach((brand) => {
+          if (brand.name == item.name.split(" ")[0].toLowerCase()) {
+            item.setBrand(brand.id);
+          }
+        });
         return item.dataValues;
       } catch (error) {
         return { error: true, data: error };
       }
     });
+
     const productsDb = await Promise.all(arrayDbProducts);
     return productsDb;
   }
