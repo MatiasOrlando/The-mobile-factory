@@ -8,10 +8,10 @@ Brand.init(
     name: {
       type: S.STRING,
       allowNull: false,
+      unique: true,
     },
     description: {
       type: S.STRING,
-      allowNull: false,
     },
   },
   {

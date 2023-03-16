@@ -6,7 +6,7 @@ adminCategoryRoutes.post("/add", async (req, res) => {
   // Por req.body recibimos idUsuario , idCategory, nombre y descripcion
   // const idCategory = "Motorola"; A CHEQUEAR
   const idUser = 1;
-  const name = "Celulares Google";
+  const name = "Google";
   const description = "tdadadat";
 
   try {
@@ -31,12 +31,12 @@ adminCategoryRoutes.post("/add", async (req, res) => {
 adminCategoryRoutes.delete("/delete", async (req, res) => {
   // Por req.body recibimos idUsuario , y nombre de la categoria
   const idUser = 1;
-  const name = "Celulares Iphone";
+  const name = "Samsung";
   try {
     const userPrivileged = await Customer.findByPk(idUser);
     if (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) {
       const categorySelectedDelete = await Brand.findOne({
-        where: { name: name },
+        where: { name: name.toLowerCase() },
       });
       if (categorySelectedDelete) {
         await Brand.destroy({ where: { name } });
@@ -77,8 +77,8 @@ adminCategoryRoutes.get("/getCategorys", async (req, res) => {
 adminCategoryRoutes.put("/edit", async (req, res) => {
   // Recibimos id de usuario para validar privilegios, y el body del contenido a actualizar
   const idUser = 1;
-  const previousName = "celulares SAMSUNG";
-  const newName = "celulares NOKIA";
+  const previousName = "Samsung";
+  const newName = "Nokia";
   const newDescription = "hola";
   try {
     const userPrivileged = await Customer.findByPk(idUser);
