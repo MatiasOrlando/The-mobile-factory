@@ -3,6 +3,7 @@ import logger from "redux-logger";
 import userReducer from "./user";
 import productsReducer from "./products";
 import categoriesReducer from "./categories";
+import queryReducer from "./querySearch"
 import allProductsReducer from "./allProducts";
 
 const store = configureStore({
@@ -11,6 +12,9 @@ const store = configureStore({
     user: userReducer,
     products: productsReducer,
     categories: categoriesReducer,
+
+    queryData:queryReducer,
+
     allProducts: allProductsReducer
   },
 });

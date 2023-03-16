@@ -1,5 +1,5 @@
 const ProductsService = require("../services/products");
-const mappedArray = require("../config/dataFetch");
+const {mappedArray,mapSearch }= require("../config/dataFetch");
 
 const listAllProducts = async (req, res) => {
   const { page } = req.query;
@@ -26,11 +26,13 @@ const listSingleProduct = async (req, res) => {
 
 const listQueryProducts = async (req, res) => {
   // /products/search?q=${searchTerm} Deben mandarme por query la palabra de busqueda.
-  //   const { searchTerm } = req.query;
-  const searchTerm = "Iphone";
+    const { searchTerm } = req.query;
+ //const searchTerm = "Iphone";
+ console.log(req.query);
   try {
     const arrayProducts = await ProductsService.getQueryProducts(searchTerm);
-    const newArr = mappedArray(arrayProducts.data);
+    const newArr = mapSearch(arrayProducts.data);
+    console.log(newArr);
     const productsDb = await ProductsService.productCreation(newArr);
     res.status(200).send(productsDb);
   } catch (error) {

@@ -7,7 +7,7 @@ import {
   Toolbar,
   Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,8 +19,11 @@ import { resetProducts } from "../../state/products";
 import toast, { Toaster } from "react-hot-toast";
 import Badge from "@mui/material/Badge";
 import HistoryIcon from '@mui/icons-material/History';
+import { TextField } from "@mui/material";
 import { margin } from "@mui/system";
 import { resetCategories } from "../../state/categories";
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import { queryProducts } from "../../state/querySearch";
 import { resetAllP } from "../../state/allProducts";
 
 const Navbar = () => {
@@ -28,10 +31,20 @@ const Navbar = () => {
   const products = useSelector((state) => state.products);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState(0);
+  const [searchValue, setSearchValue] = useState("");
 
   const StyledLink = styled(Link)({
     textDecoration: "none",
   });
+
+const handleSubmit = async(e)=>{
+  e.preventDefault()
+  const productSearch= await axios.get(`http://localhost:3001/search?searchTerm=${searchValue}`)
+  dispatch(queryProducts(productSearch))
+  navigate("/search")
+}
+
   const handleClick = async () => {
     try {
       await axios.post(
@@ -58,6 +71,10 @@ const Navbar = () => {
       0
     );
     return qtyItems;
+  };
+
+  const handleSearchValueChange = (event) => {
+    setSearchValue(event.target.value);
   };
 
   const handleCartView = () => {
@@ -91,11 +108,24 @@ const Navbar = () => {
             {
               /* user.admin || user.owner */
               user.id && (
-                <StyledLink to={"/categorias"}>
+                <StyledLink to={"/categorias"} >
                   <Tab label="categorias(admin)" sx={{ color: "white" }} />
                 </StyledLink>
               )
             }
+            <form onSubmit={handleSubmit}>
+              <TextField
+    label="Buscar"
+    color="primary"
+    variant="outlined"
+    size="small"
+    value={searchValue}
+    onChange={handleSearchValueChange}
+    sx={{ marginLeft: "30px", backgroundColor:"white", borderRadius:"8px",width:"110%"}}
+        />
+            </form>
+            
+
             {
               /* user.admin || user.owner */
               user.id && (
@@ -107,20 +137,23 @@ const Navbar = () => {
             <>
               <Tabs
                 sx={{ marginLeft: "auto" }}
-                indicatorColor="secondary"
+                indicatorColor="primary"
                 textColor="inherit"
-                value={0}
+                value={activeTab}
               >
                 <StyledLink to={"/"}>
-                  <Tab label="home" sx={{ color: "white" }} />
+                  <Tab label="home" sx={{ color: "white" }} onClick={() => setActiveTab(0)} />
                 </StyledLink>
-                <StyledLink to={"/shopping-history"} sx={{display:"flex", alignItems:"center"}}>
-                  <HistoryIcon sx={{ color: "white", width:"0.85em"}}/>
+                <StyledLink to={"/shopping-history"} sx={{display:"flex", alignItems:"center", marginLeft:"2%"}} onClick={() => setActiveTab(1)}>
+                  <HistoryIcon sx={{ color: "white", width:"0.85em"}} />
                 <Tab label="Historial" sx={{ color: "white", paddingLeft:0.5}}/>
-                
                 </StyledLink>
-                <Tab label="marcas" />
-                <Tab label="sale" />
+                <StyledLink to={"/admin"} sx={{display:"flex", alignItems:"center", marginLeft:"2px"}} onClick={() => setActiveTab(2)}>
+                <SupervisorAccountIcon sx={{ color: "white", width:"0.85em"}}/>
+                <Tab label="Admin" sx={{ color: "white", paddingLeft:"0.1px", paddingRight:"25%"}}/>
+                </StyledLink >
+                <Tab label="marcas" onClick={() => setActiveTab(3)}/>
+                <Tab label="sale" onClick={() => setActiveTab(4)} />
               </Tabs>
 
               {user.id ? (
