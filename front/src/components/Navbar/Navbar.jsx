@@ -114,11 +114,12 @@ const handleSubmit = async(e)=>{
             <form onSubmit={handleSubmit}>
               <TextField
     label="Buscar"
+    color="primary"
     variant="outlined"
     size="small"
     value={searchValue}
     onChange={handleSearchValueChange}
-    sx={{ marginLeft: "20px"}}
+    sx={{ marginLeft: "30px", backgroundColor:"white", borderRadius:"8px",width:"110%"}}
         />
             </form>
             
