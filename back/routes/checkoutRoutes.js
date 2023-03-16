@@ -89,5 +89,29 @@ checkoutRouter.get("/ordersUser/:customerId", async (req, res) => {
     }
 })
 
+checkoutRouter.get("/ordersOneUser/:customerId", async (req, res) => {
+    //:customerId , es el usuario al cual que se quiere ver su historial de orders
+    //req.body.id , es el id para verificar si el que pide ese historial es admin/owner
+    let theId = req.params.customerId;
+
+    let user = await Customer.findByPk(theId)
+
+    if (!user) return res.status(404).send("Invalid id user")
+
+    try {
+        const orders = await Order.findAll({
+            where: {
+                customerId: user.id
+            }
+        })
+
+        res.send(orders)
+
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
 
 module.exports = checkoutRouter;
