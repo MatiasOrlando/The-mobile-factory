@@ -51,7 +51,7 @@ const AdmCategories = () => {
         console.error(error);
       }
     }
-    if (!categoriesRedux.length) {
+    if (!categoriesRedux.length && user.id) {
       fetchData();
     }
   }, [user]);

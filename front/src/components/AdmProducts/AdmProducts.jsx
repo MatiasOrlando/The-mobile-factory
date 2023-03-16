@@ -34,7 +34,7 @@ const AdmProducts = () => {
         console.error(error);
       }
     }
-    if (!allProductsRedux.length) {
+    if (!allProductsRedux.length && user.id) {
       fetchData();
     }
   }, [user]);
