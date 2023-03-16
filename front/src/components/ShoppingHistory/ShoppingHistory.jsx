@@ -13,14 +13,15 @@ import { useSelector } from "react-redux";
 
 function ShoppingHistory() {
   const [histProds, setHistProds] = useState([]);
+  
 
   const [data, setData] = useState([]);
 
-  //const user = useSelector((state) => state.user);
-  let user = JSON.parse(localStorage.getItem("user"));
+  const user = useSelector((state) => state.user);
+  
 
   useEffect(() => {
-    async function fetchDevices() {
+    async function fetchUser() {
       const response = await fetch(
         `http://localhost:3001/checkout/ordersOneUser/${user.id}`
       );
@@ -37,8 +38,32 @@ function ShoppingHistory() {
       });
       setHistProds(arr);
     }
-    fetchDevices();
-  }, []);
+
+    async function fetchAdmin() {
+      const response = await fetch(
+        `http://localhost:3001/checkout/ordersUser/${user.id}`
+      );
+      const data = await response.json();
+
+      let arr = [];
+      setData(data);
+      let miData = data.map((el) => {
+        return { prods: el.products, id: el.id };
+      });
+
+      miData.forEach((el) => {
+        el.prods.forEach((e) => arr.push({ prod: JSON.parse(e), id: el.id }));
+      });
+      setHistProds(arr);
+    }
+
+
+    if(user.admin || user.owner){
+      fetchAdmin()
+    }else{
+      fetchUser()
+    }
+  }, [user]);
 
   return (
     <div style={{ marginTop: "70px" }}>

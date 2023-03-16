@@ -51,34 +51,19 @@ checkoutRouter.post("/addOrder", async (req, res) => {
 
 checkoutRouter.get("/ordersUser/:customerId", async (req, res) => {
     //:customerId , es el usuario al cual que se quiere ver su historial de orders
-    //req.body.id , es el id para verificar si el que pide ese historial es admin/owner
+
     try {
-        const theId = req.body.id;
+        const theId = req.params.customerId;
         const adminOrOwner = await Customer.findOne({
             where: {
                 id: theId
             }
         });
 
-        if (!adminOrOwner.admin && !adminOrOwner.owner) return res.status(404).send("You must be admin or owner")
+        /*         if (!adminOrOwner.admin && !adminOrOwner.owner) return res.status(404).send("You must be admin or owner") */
 
-        const id = req.params.customerId;
 
-        const userCheck = await Customer.findOne({
-            where: {
-                id: id
-            }
-        });
-
-        if (!userCheck) return res.status(404).send("user does not exist")
-
-        if (userCheck.admin || userCheck.owner) return res.status(404).send("info of another admin/owner not available")
-
-        const orders = await Order.findAll({
-            where: {
-                customerId: id
-            }
-        })
+        const orders = await Order.findAll()
 
         if (!orders.length) return res.status(404).send("Invalid id user")
 
