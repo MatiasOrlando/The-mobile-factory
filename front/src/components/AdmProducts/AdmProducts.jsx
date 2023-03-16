@@ -3,7 +3,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
-import toast from "react-hot-toast";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 import {
@@ -16,56 +15,21 @@ import {
 const AdmProducts = () => {
   const dispatch = useDispatch();
   const allProductsRedux = useSelector((state) => state.allProducts);
-  /* para cargar Redux con todos los productos la primera vez que entramos */
+  const user = useSelector((state) => state.user);
   useEffect(() => {
     async function fetchData() {
       try {
-        /* const productos = axios.get("ruta back que trae todos los productos de la DB"); */
-        let fakeProducts = [
-          {
-            id: 1,
-            name: "Apple iPhone",
-            price: "765.71€",
-            color: "Purple",
-            display_size: "6.1'",
-            info: "2021 - A14 Bionic Chip - 6 cores - 6.1 inch - 64GB - Purple - MJNM3ZD/A marca Samsung",
-            year: 2021,
-            storage: "64gb",
-            amountCores: "6",
-            stock: 6,
-            brand: "soy la categoria",
-            images: [],
-          },
-          {
-            id: 2,
-            name: "Samsung A88",
-            price: "550.00€",
-            color: "Purple",
-            display_size: "6.1'",
-            info: "2021 - A14 Bionic Chip - 6 cores - 6.1 inch - 64GB - Purple - MJNM3ZD/A marca Samsung",
-            year: 2021,
-            storage: "64gb",
-            amountCores: "8",
-            stock: 6,
-            brand: "soy la categoria",
-            images: [],
-          },
-          {
-            id: 3,
-            name: "Nokia 1100",
-            price: "1.16€",
-            color: "Purple",
-            display_size: "6.1'",
-            info: "2021 - A14 Bionic Chip - 6 cores - 6.1 inch - 64GB - Purple - MJNM3ZD/A marca Samsung",
-            year: 2021,
-            storage: "64gb",
-            amountCores: "3",
-            stock: 6,
-            brand: "soy la categoria",
-            images: [],
-          },
-        ];
-        dispatch(loginAllP(fakeProducts));
+        const products = await axios.get(
+          `http://localhost:3001/admin/products/allProducts?id=${user.id}`
+        );
+        products.data.forEach((item) => {
+          let brand = JSON.stringify(item.brand);
+          if (brand !== "null") {
+            let vuelta = JSON.parse(brand);
+            item.brand = vuelta.name;
+          }
+        });
+        dispatch(loginAllP(products.data));
       } catch (error) {
         console.error(error);
       }
@@ -73,12 +37,11 @@ const AdmProducts = () => {
     if (!allProductsRedux.length) {
       fetchData();
     }
-  }, []);
+  }, [user]);
 
   const [productToDelete, setProdToDelete] = useState([]);
   const [productCreation, setProdCreation] = useState(false);
   const newProductModel = {
-    id: 4,
     name: "",
     price: "",
     color: "",
@@ -94,10 +57,18 @@ const AdmProducts = () => {
 
   const [newProduct, setNewProduct] = useState(newProductModel);
 
-  const cellEdit = (updated, old) => {
-    /* ANTES HAY QUE ACTUALIZAR LA DATABASE */
-    dispatch(updateAllP(updated));
-    return updated;
+  const cellEdit = async (updated, old) => {
+    console.log(allProductsRedux[0]);
+    try {
+      const updatedProduct = await axios.put(
+        `http://localhost:3001/admin/products/edit-product?idUser=${user.id}&idProduct=${updated.id}`,
+        { updated }
+      );
+      dispatch(updateAllP(updated));
+      return updated;
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const columns = [
@@ -177,22 +148,39 @@ const AdmProducts = () => {
   };
 
   const handleDelete = () => {
-    /* ANTES ACTUALIZAR DATABASE */
-    dispatch(removeAllP(productToDelete));
+    const prodObj = productToDelete.map((id) => {
+      const obj = allProductsRedux.find((e) => e.id === id);
+      return obj;
+    });
+    try {
+      prodObj.forEach(async (obj) => {
+        await axios.delete(
+          `http://localhost:3001/admin/products/delete-product?id=${user.id}&idProduct=${obj.id}`
+        );
+      });
+      dispatch(removeAllP(productToDelete));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleCreateBtn = () => {
     setProdCreation(!productCreation);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    /* PRIMERO ACTUALIZAMOS LA DATABASE */
-    /* Atento que no obtengo exactamente toda la info, falta: id, api_id, page */
-    /* la categoría, paso un string */
-    dispatch(addAllP(newProduct));
-    setNewProduct(newProductModel);
-    setProdCreation(false);
+    try {
+      const newProductBack = await axios.post(
+        `http://localhost:3001/admin/products/add-product?idUser=${user.id}`,
+        { newProduct }
+      );
+      dispatch(addAllP(newProductBack.data[0]));
+      setNewProduct(newProductModel);
+      setProdCreation(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleCreationState = (e) => {
@@ -209,7 +197,7 @@ const AdmProducts = () => {
   };
 
   return (
-    <div style={{ marginTop: "100px", height: 400, width: "100%" }}>
+    <div style={{ marginTop: "100px", height: 450, width: "100%" }}>
       <Typography variant="h3" align="center">
         PRODUCTOS
       </Typography>
@@ -236,7 +224,6 @@ const AdmProducts = () => {
             component="form"
             autoComplete="off"
             margin={2}
-            // sx={{ display: "flex", alignItems: "center" }}
             onSubmit={(e) => handleSubmit(e)}
           >
             <TextField
@@ -270,7 +257,7 @@ const AdmProducts = () => {
             <TextField
               sx={{ margin: "10px", width: "20%" }}
               required
-              id="brand"
+              id="category"
               label="Categoria"
               variant="outlined"
               onChange={(e) => handleCreationState(e)}

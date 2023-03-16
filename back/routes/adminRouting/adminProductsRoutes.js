@@ -1,20 +1,17 @@
 const express = require("express");
 const adminProductsRoutes = express.Router();
-const { Product, Customer } = require("../../models");
+const { Product, Customer, Brand } = require("../../models");
 
 adminProductsRoutes.delete("/delete-product", async (req, res) => {
-  // Me envian por body el id del producto y el id del usuario que quiere borrar dicho producto para validar sus privilegios
-  // const {idProduct , id} = req.body
-  const id = 1;
-  const idProduct = 645;
+  const {id, idProduct} = req.query;
   try {
-    const userPrivileged = await Customer.findByPk(id);
-    const productToDelete = await Product.findByPk(idProduct);
+    const userPrivileged = await Customer.findByPk(parseInt(id));
+    const productToDelete = await Product.findByPk(parseInt(idProduct));
     if (
       (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) &&
       productToDelete
     ) {
-      await Product.destroy({ where: { id: idProduct } });
+      await Product.destroy({ where: { id: parseInt(idProduct) } });
       res.status(201).send(productToDelete);
     } else {
       !productToDelete
@@ -27,21 +24,13 @@ adminProductsRoutes.delete("/delete-product", async (req, res) => {
 });
 
 adminProductsRoutes.post("/add-product", async (req, res) => {
-  // Me envian por body y todos los datos necesarios para crear un Product y el id del usuario que quiere agregar
-  // const { idUser, name, price, color, display_size, info, images, year, storage, amountCores, stock } = req.body
-  const name = "Motorola v3";
-  const price = "100€";
-  const color = "black";
-  const display_size = "4.5''";
-  const info = "test";
-  const year = 2010;
-  const storage = "64gb";
-  const amountCores = "8";
-  const stock = 1;
-  const idUser = 1;
-  const images = [];
+
+  const {idUser} = req.query;
+  const {newProduct} = req.body;
+  const {name, price, color, display_size, info, year, storage, amountCores, stock, images} = newProduct;
+  const page = 130;
   try {
-    const userPrivileged = await Customer.findByPk(idUser);
+    const userPrivileged = await Customer.findByPk(parseInt(idUser));
     if (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) {
       const newProduct = await Product.findOrCreate({
         where: {
@@ -56,6 +45,7 @@ adminProductsRoutes.post("/add-product", async (req, res) => {
           storage,
           amountCores,
           stock,
+          page
         },
       });
       res.status(200).send(newProduct);
@@ -65,32 +55,18 @@ adminProductsRoutes.post("/add-product", async (req, res) => {
   } catch {
     res.status(404).send(`Invalid user`);
   }
+  
 });
 
 adminProductsRoutes.put("/edit-product", async (req, res) => {
-  // Debo recibir id de usuario para identificar privilegios
-  // Debo recibir id de producto para identificar el producto a editar
-  // Idealmente recibir los ids de producto y usuario por req.query
-  // Debo recibir por body el nuevo contenido de dicho producto a editar.
-  const idUser = 1;
-  const idProduct = 639;
-  const name = "Nokia 1100";
-  const price = "10€";
-  const color = "space-grey";
-  const display_size = "3.5''";
-  const info = "probando1234";
-  const year = 2000;
-  const storage = "16gb";
-  const amountCores = "2";
-  const stock = 5;
-  const images = [
-    "https://www.telecomweb.eu//Files/3/9000/9557/ProductPhotos/1000/18009753.jpg",
-  ];
+  const {idUser, idProduct} = req.query;
+  const {updated} = req.body;
+  const {name, price, color, display_size, info, year, storage, amountCores, stock, images} = updated;
   try {
-    const userPrivileged = await Customer.findByPk(idUser);
+    const userPrivileged = await Customer.findByPk(parseInt(idUser));
     if (
       (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) &&
-      idProduct
+      parseInt(idProduct)
     ) {
       const [extras, updatedProduct] = await Product.update(
         {
@@ -105,7 +81,7 @@ adminProductsRoutes.put("/edit-product", async (req, res) => {
           amountCores,
           stock,
         },
-        { where: { id: idProduct }, returning: true }
+        { where: { id: parseInt(idProduct) }, returning: true }
       );
       res.send(updatedProduct[0]);
     } else {
@@ -117,13 +93,13 @@ adminProductsRoutes.put("/edit-product", async (req, res) => {
 });
 
 adminProductsRoutes.get("/allProducts", async (req, res) => {
-  // Debo recibir id de usuario para identificar privilegios por query
-  // const {idUser} = req.query
-  const idUser = 1;
+ 
+  const {id} = req.query
+  
   try {
-    const userPrivileged = await Customer.findByPk(idUser);
+    const userPrivileged = await Customer.findByPk(id);
     if (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) {
-      const allProductsDb = await Product.findAll();
+      const allProductsDb = await Product.findAll({include: {model: Brand}});
       res.status(200).send(allProductsDb);
     } else {
       res.status(404).send(`Invalid user privileges`);

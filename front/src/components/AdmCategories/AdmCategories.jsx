@@ -9,56 +9,18 @@ import {
   updateCategories,
 } from "../../state/categories";
 import { DataGrid } from "@mui/x-data-grid";
-import toast from "react-hot-toast";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 
 const AdmCategories = () => {
   const dispatch = useDispatch();
   const categoriesRedux = useSelector((state) => state.categories);
-  /* para cargar Redux con las categorias primera vez que entramos */
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        /* const categories = axios.get("ruta back que trae todas las categorias"); */
-        let fakeCategories = [
-          { id: 1, name: "Samsung", description: "Soy marca Samsung" },
-          { id: 2, name: "Nokia", description: "Soy marca vieja, Nokia" },
-          { id: 3, name: "LG", description: "Soy marca de LG" },
-        ];
-        dispatch(loginCategories(fakeCategories));
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    if (!categoriesRedux.length) {
-      fetchData();
-    }
-  }, []);
-
+  const user = useSelector((state) => state.user);
   const [categoryToDelete, setCatToDelete] = useState([]);
   const [categoryCreation, setCatCreation] = useState(false);
 
   const [newName, setNewName] = useState("");
   const [newDescription, setNewDescription] = useState("");
-
-  /* const unGetter = (e) => {
-    return e.value
-  } */
-
-  /* const descriptionSetter = (e) => {
-    return { ...e.row, description: e.value };
-  };
-
-  const nameSetter = (e) => {
-    return { ...e.row, name: e.value };
-  }; */
-
-  const cellEdit = (updated, old) => {
-    /* ANTES HAY QUE ACTUALIZAR LA DATABASE */
-    dispatch(updateCategories(updated));
-    return updated;
-  };
 
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -67,7 +29,6 @@ const AdmCategories = () => {
       headerName: "Nombre",
       width: 200,
       editable: true,
-      /* valueSetter: nameSetter, */
     },
     {
       field: "description",
@@ -76,10 +37,42 @@ const AdmCategories = () => {
       sortable: false,
       width: 900,
       editable: true,
-      /* valueGetter: unGetter,
-      valueSetter: descriptionSetter, */
     },
   ];
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const categories = await axios.get(
+          `http://localhost:3001/admin/category/getCategorys?id=${user.id}`
+        );
+        dispatch(loginCategories(categories.data));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    if (!categoriesRedux.length) {
+      fetchData();
+    }
+  }, [user]);
+
+  const cellEdit = async (updated, old) => {
+    try {
+      const updatedCategory = await axios.put(
+        `http://localhost:3001/admin/category/edit`,
+        {
+          id: user.id,
+          previousName: old.name,
+          newName: updated.name,
+          newDescription: updated.description,
+        }
+      );
+      dispatch(updateCategories(updatedCategory.data));
+      return updated;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const checkInput = (arrId) => {
     setCatToDelete(arrId);
@@ -89,23 +82,41 @@ const AdmCategories = () => {
     return console.error(error);
   };
 
-  const handleDelete = () => {
-    /* ANTES ACTUALIZAR DATABASE */
-    dispatch(removeCategories(categoryToDelete));
+  const handleDelete = async () => {
+    const catObj = categoryToDelete.map((id) => {
+      const obj = categoriesRedux.find((e) => e.id === id);
+      return obj;
+    });
+    try {
+      catObj.forEach(async (obj) => {
+        await axios.delete(
+          `http://localhost:3001/admin/category/delete?id=${user.id}&name=${obj.name}`
+        );
+      });
+      dispatch(removeCategories(categoryToDelete));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleCreateBtn = () => {
     setCatCreation(!categoryCreation);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    /* PRIMERO ACTUALIZAMOS LA DATABASE */
-    let nuevaFake = { id: 4, name: newName, description: newDescription };
-    dispatch(addCategories(nuevaFake));
-    setNewName("");
-    setNewDescription("");
-    setCatCreation(false);
+    try {
+      const newCategory = await axios.post(
+        `http://localhost:3001/admin/category/add`,
+        { id: user.id, name: newName, description: newDescription }
+      );
+      dispatch(addCategories(newCategory.data));
+      setNewName("");
+      setNewDescription("");
+      setCatCreation(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

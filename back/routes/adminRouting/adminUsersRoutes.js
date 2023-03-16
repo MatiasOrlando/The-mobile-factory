@@ -8,7 +8,7 @@ adminUsersRoutes.put("/add", async (req, res) => {
   // Se verifica primero con el ID que el usuario sea OWNER/ADM GOD para realizar cambios y luego ejecuta.
   // const {id, emailUser} = req.body
   const id = 1;
-  const email = "mat@gmail.com";
+  const email = "pepe@mail.com";
   try {
     const validEmail = await Customer.findOne({ where: { email } });
     const userOwner = await Customer.findByPk(id);

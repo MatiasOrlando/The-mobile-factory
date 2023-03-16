@@ -3,14 +3,11 @@ const adminCategoryRoutes = express.Router();
 const { Customer, Brand } = require("../../models");
 
 adminCategoryRoutes.post("/add", async (req, res) => {
-  // Por req.body recibimos idUsuario , idCategory, nombre y descripcion
-  // const idCategory = "Motorola"; A CHEQUEAR
-  const idUser = 1;
-  const name = "Google";
-  const description = "tdadadat";
+
+  const {id, name, description} = req.body;
 
   try {
-    const userPrivileged = await Customer.findByPk(idUser);
+    const userPrivileged = await Customer.findByPk(id);
     if (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) {
       const [item, created] = await Brand.findOrCreate({
         where: {
@@ -29,11 +26,11 @@ adminCategoryRoutes.post("/add", async (req, res) => {
 });
 
 adminCategoryRoutes.delete("/delete", async (req, res) => {
-  // Por req.body recibimos idUsuario , y nombre de la categoria
-  const idUser = 1;
-  const name = "Samsung";
+  
+  const {name, id} = req.query
+  
   try {
-    const userPrivileged = await Customer.findByPk(idUser);
+    const userPrivileged = await Customer.findByPk(id);
     if (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) {
       const categorySelectedDelete = await Brand.findOne({
         where: { name: name.toLowerCase() },
@@ -57,10 +54,10 @@ adminCategoryRoutes.delete("/delete", async (req, res) => {
 });
 
 adminCategoryRoutes.get("/getCategorys", async (req, res) => {
-  // Recibimos id de usuario para validar privilegios
-  const idUser = 1;
+  
+  const {id} = req.query 
   try {
-    const userPrivileged = await Customer.findByPk(idUser);
+    const userPrivileged = await Customer.findByPk(parseInt(id));
     if (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) {
       const allCategorys = await Brand.findAll();
       allCategorys && res.status(200).send(allCategorys);
@@ -75,13 +72,11 @@ adminCategoryRoutes.get("/getCategorys", async (req, res) => {
 });
 
 adminCategoryRoutes.put("/edit", async (req, res) => {
-  // Recibimos id de usuario para validar privilegios, y el body del contenido a actualizar
-  const idUser = 1;
-  const previousName = "Samsung";
-  const newName = "Nokia";
-  const newDescription = "hola";
+ 
+  const {id, previousName, newName, newDescription} = req.body;
+  
   try {
-    const userPrivileged = await Customer.findByPk(idUser);
+    const userPrivileged = await Customer.findByPk(id);
     if (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) {
       const [extras, updatedCategory] = await Brand.update(
         {
