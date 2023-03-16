@@ -12,8 +12,10 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 function ShoppingHistory() {
-  const [history, setHistory] = useState([]);
   const [histProds, setHistProds] = useState([]);
+
+  const [data, setData] = useState([]);
+
   //const user = useSelector((state) => state.user);
   let user = JSON.parse(localStorage.getItem("user"));
 
@@ -25,25 +27,19 @@ function ShoppingHistory() {
       const data = await response.json();
 
       let arr = [];
-      let miData = data.map((el) => el.products);
+      setData(data);
+      let miData = data.map((el) => {
+        return { prods: el.products, id: el.id };
+      });
+
       miData.forEach((el) => {
-        el.forEach((e) => arr.push(JSON.parse(e)));
+        el.prods.forEach((e) => arr.push({ prod: JSON.parse(e), id: el.id }));
       });
       setHistProds(arr);
-      setHistory(data);
     }
     fetchDevices();
   }, []);
 
-  /* let miArr = JSON.parse(history[0].products);
-  let miMap = miArr.map(prod=>JSON.parse(prod))
-  console.log(miMap); */
-
-  const purchases = [
-    { date: "2022-03-10", articulo: "Shoes", quantity: 1, precio: 50 },
-    { date: "2022-03-11", articulo: "T-shirt", quantity: 2, precio: 20 },
-    { date: "2022-03-12", articulo: "Jeans", quantity: 10, precio: 80 },
-  ];
   return (
     <div style={{ marginTop: "70px" }}>
       {
@@ -80,7 +76,10 @@ function ShoppingHistory() {
                       Catidad
                     </TableCell>
                     <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                      Precio Total ($)
+                      Nro de Orden
+                    </TableCell>
+                    <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                      Subtotales ($)
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -88,7 +87,7 @@ function ShoppingHistory() {
                   {histProds.map((purchase, i) => (
                     <TableRow key={i}>
                       <TableCell component="th" scope="row">
-                        {new Date(purchase.updatedAt).toLocaleDateString(
+                        {new Date(purchase.prod.updatedAt).toLocaleDateString(
                           "es-AR",
                           { year: "2-digit", month: "2-digit", day: "2-digit" }
                         ) +
@@ -101,13 +100,18 @@ function ShoppingHistory() {
                           }) +
                           " hs"}
                       </TableCell>
-                      <TableCell>{purchase.productId}</TableCell>
-                      <TableCell align="right">{purchase.price}</TableCell>
-                      <TableCell align="right">{purchase.quantity}</TableCell>
+                      <TableCell>{purchase.prod.name}</TableCell>
+                      <TableCell align="right">{purchase.prod.price}</TableCell>
+                      <TableCell align="right">
+                        {purchase.prod.quantity}
+                      </TableCell>
+                      <TableCell align="right">N{purchase.id}</TableCell>
                       <TableCell align="right">
                         {(
-                          parseFloat(purchase.price) * purchase.quantity
+                          parseFloat(purchase.prod.price) *
+                          purchase.prod.quantity
                         ).toFixed(2)}
+                        €
                       </TableCell>
                     </TableRow>
                   ))}
