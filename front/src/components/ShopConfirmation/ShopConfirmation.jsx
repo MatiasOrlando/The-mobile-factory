@@ -21,6 +21,8 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Cleave from "cleave.js/react";
 import "./ShopConfirmation.css";
+import axios from "axios";
+import { resetProducts } from "../../state/products";
 
 const ShopConfirmation = () => {
   const navigate = useNavigate();
@@ -52,7 +54,7 @@ const ShopConfirmation = () => {
   const [cardNum, setCardNum] = useState("");
   const [payMethod, setPayMethod] = useState("tarjeta");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (payMethod === "tarjeta") {
       if (!cardType) {
@@ -83,14 +85,24 @@ const ShopConfirmation = () => {
         });
       }
     }
-    /* PEGAMOS A DB */
-    toast.success("Compra realizada con éxito!", {
-      duration: "180",
-      style: {
-        background: "white",
-        color: "black",
-      },
-    });
+
+    try {
+      const orderConfirmed = await axios.post(
+        "http://localhost:3001/checkout/addOrder",
+        { id: user.id }
+      );
+      dispatch(resetProducts([]));
+      toast.success("Compra realizada con éxito!", {
+        duration: "180",
+        style: {
+          background: "white",
+          color: "black",
+        },
+      });
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   function onCreditCardChange(event) {
