@@ -15,6 +15,8 @@ import ShoppingHistory from "../ShoppingHistory/ShoppingHistory";
 import AdmCategories from "../AdmCategories/AdmCategories";
 import AdminView from "../Admin/AdminView";
 import ListSearch from "../ListSearch/ListSearch";
+import AdmProducts from "../AdmProducts/AdmProducts";
+import ShopConfirmation from "../ShopConfirmation/ShopConfirmation";
 
 function App() {
   const navigate = useNavigate();
@@ -53,6 +55,8 @@ function App() {
         <Route path="/search" element={<ListSearch />} />
         <Route path="/" element={<Grilla />} />
         <Route path="/categorias" element={<AdmCategories />} />
+        <Route path="/productos" element={<AdmProducts />} />
+        <Route path="/shopConfirm" element={<ShopConfirmation />} />
         
       </Routes>
     </div>

@@ -111,7 +111,24 @@ adminProductsRoutes.put("/edit-product", async (req, res) => {
     } else {
       res.status(404).send(`Invalid user privileges`);
     }
-  } catch (error) {
+  } catch {
+    res.status(404).send(`Invalid user`);
+  }
+});
+
+adminProductsRoutes.get("/allProducts", async (req, res) => {
+  // Debo recibir id de usuario para identificar privilegios por query
+  // const {idUser} = req.query
+  const idUser = 1;
+  try {
+    const userPrivileged = await Customer.findByPk(idUser);
+    if (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) {
+      const allProductsDb = await Product.findAll();
+      res.status(200).send(allProductsDb);
+    } else {
+      res.status(404).send(`Invalid user privileges`);
+    }
+  } catch {
     res.status(404).send(`Invalid user`);
   }
 });

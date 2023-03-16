@@ -24,6 +24,7 @@ import { margin } from "@mui/system";
 import { resetCategories } from "../../state/categories";
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import { queryProducts } from "../../state/querySearch";
+import { resetAllP } from "../../state/allProducts";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
@@ -55,6 +56,7 @@ const handleSubmit = async(e)=>{
       dispatch(setUser({}));
       dispatch(resetProducts([]));
       dispatch(resetCategories([]));
+      dispatch(resetAllP([]));
       navigate("/login");
     } catch (error) {
       console.error(error);
@@ -123,6 +125,15 @@ const handleSubmit = async(e)=>{
         />
             </form>
             
+
+            {
+              /* user.admin || user.owner */
+              user.id && (
+                <StyledLink to={"/productos"}>
+                  <Tab label="productos(admin)" sx={{ color: "white" }} />
+                </StyledLink>
+              )
+            }
             <>
               <Tabs
                 sx={{ marginLeft: "auto" }}
