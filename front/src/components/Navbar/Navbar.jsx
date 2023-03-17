@@ -8,6 +8,7 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  MenuItem,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useDispatch, useSelector } from "react-redux";
@@ -94,6 +95,7 @@ const Navbar = () => {
                 </StyledLink>
 
                 <Tab label="marcas" />
+
                 <Tab label="sale" />
               </Tabs>
 

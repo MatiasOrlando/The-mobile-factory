@@ -11,6 +11,8 @@ import { setUser } from "../../state/user";
 import CardItem from "../../commons/Card/Card";
 import ShoppingCart from "../../commons/ ShoppingCart/ShoppingCart";
 import { cartProducts, loginProducts } from "../../state/products";
+import { loginReview } from "../../state/reviews";
+import { loginComment } from "../../state/comments";
 
 function App() {
   const navigate = useNavigate();
@@ -19,20 +21,26 @@ function App() {
   useEffect(async () => {
     const userPersist = JSON.parse(localStorage.getItem("user")) || {};
     dispatch(setUser(userPersist));
+    const valoracionPersist =
+      JSON.parse(localStorage.getItem("valoraciones")) || [];
+    dispatch(loginReview(valoracionPersist));
+    const commentsPersist =
+      JSON.parse(localStorage.getItem("comentarios")) || [];
+    dispatch(loginComment(commentsPersist));
     try {
       if (userPersist.id) {
-        const userCart = await axios.get(`http://localhost:3001/carrito/${userPersist.id}`)
+        const userCart = await axios.get(
+          `http://localhost:3001/carrito/${userPersist.id}`
+        );
         if (typeof userCart.data !== "string") {
           dispatch(loginProducts(userCart.data));
         } else {
-          dispatch(loginProducts([]))
+          dispatch(loginProducts([]));
         }
-        
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-    
   }, []);
 
   return (
