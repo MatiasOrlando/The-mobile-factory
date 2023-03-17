@@ -28,6 +28,7 @@ import { resetCategories } from "../../state/categories";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import { queryProducts } from "../../state/querySearch";
 import { resetAllP } from "../../state/allProducts";
+import { resetAllCust } from "../../state/allCustomers";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
@@ -83,6 +84,7 @@ const Navbar = () => {
       dispatch(resetProducts([]));
       dispatch(resetCategories([]));
       dispatch(resetAllP([]));
+      dispatch(resetAllCust([]));
       navigate("/login");
     } catch (error) {
       console.error(error);
@@ -195,63 +197,69 @@ const Navbar = () => {
                   false
                 )}
 
-                {user.admin ||
-                  (user.owner && (
-                    <StyledLink
-                      to={"/admin"}
+                {user.owner || user.admin ? (
+                  <StyledLink
+                    to={"/admin"}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      width:"85px"
+                    }}
+                    onClick={() => setActiveTab(2)}
+                  >
+                    <SupervisorAccountIcon
+                      sx={{ color: "white", width: "0.85em", padding: "0px", margin: "0px" }}
+                    />
+                    <Tab
+                      label="Admin"
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginLeft: "2px",
+                        color: "white",
+                        paddingLeft: "0.1px",
+                        paddingRight: "25%",
                       }}
-                      onClick={() => setActiveTab(2)}
-                    >
-                      <SupervisorAccountIcon
-                        sx={{ color: "white", width: "0.85em" }}
-                      />
-                      <Tab
-                        label="Admin"
-                        sx={{
-                          color: "white",
-                          paddingLeft: "0.1px",
-                          paddingRight: "25%",
-                        }}
-                      />
-                    </StyledLink>
-                  ))}
-
-
+                    />
+                  </StyledLink>
+                ) : (
+                  false
+                )}
 
                 {
                   /* user.admin || user.owner */
-                  user.admin ||
-                    (user.owner && (
-                      <StyledLink to={"/categorias"}>
-                        <Tab
-                          label="categorias"
-                          sx={{ color: "white" }}
-                          onClick={() => setActiveTab(3)}
-                        />
-                      </StyledLink>
-                    ))
+                  user.admin || user.owner ? (
+                    <StyledLink to={"/categorias"} sx={{display:"flex", alignItems:"center"}}>
+                      <SupervisorAccountIcon
+                      sx={{ color: "white", width: "0.85em" }}
+                    />
+                      <Tab
+                        label="categorias"
+                        sx={{ color: "white", padding:"0px" }}
+                        onClick={() => setActiveTab(3)}
+                      />
+                    </StyledLink>
+                  ) : (
+                    false
+                  )
                 }
 
                 {
                   /* user.admin || user.owner */
-                  user.admin ||
-                    (user.owner && (
-                      <StyledLink to={"/productos"}>
-                        <Tab
-                          label="productos"
-                          sx={{ color: "white" }}
-                          onClick={() => setActiveTab(4)}
-                        />
-                      </StyledLink>
-                    ))
+                  user.admin || user.owner ? (
+                    <StyledLink to={"/productos"} sx={{display:"flex", alignItems:"center"}}>
+                      <SupervisorAccountIcon
+                      sx={{ color: "white", width: "0.85em" }}
+                    />
+                      <Tab
+                        label="productos"
+                        sx={{ color: "white", padding:"0px" }}
+                        onClick={() => setActiveTab(4)}
+                      />
+                    </StyledLink>
+                  ) : (
+                    false
+                  )
                 }
                 {/* <Tab label="marcas" onClick={() => setActiveTab(3)} />
                 <Tab label="sale" onClick={() => setActiveTab(4)} /> */}
-
               </Tabs>
 
               {user.id ? (

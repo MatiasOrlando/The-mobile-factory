@@ -16,7 +16,7 @@ function AdminView() {
         const customers = await axios.get(
           `http://localhost:3001/admin/users/getUsers?id=${user.id}`
         );
-        console.log(customers.data);
+        console.log("ACAAAAA",customers.data);
         dispatch(loginAllCust(customers.data));
       } catch (error) {
         console.error(error);
@@ -55,6 +55,9 @@ function AdminView() {
   ];
   const handlePromote = async () => {
     const usr = allCustomers.find((item) => item.id === selectedUser)
+    if (usr.owner) {
+      return 
+    }
     try {
       const updatedUser = await axios.put("http://localhost:3001/admin/users/add", {id: user.id, email: usr.email, old: usr.admin})
       dispatch(updateAllCust(updatedUser.data))
@@ -65,6 +68,9 @@ function AdminView() {
   
   const handleDelete = async () => {
     const usr = allCustomers.find((item) => item.id === selectedUser)
+    if (usr.owner) {
+      return 
+    }
     try {
       const deletedUser = await axios.delete(`http://localhost:3001/admin/users/deleteUser?id=${user.id}&email=${usr.email}`)
       console.log(deletedUser.data);
