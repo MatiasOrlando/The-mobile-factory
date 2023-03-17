@@ -5,7 +5,6 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
-import "./Content.css";
 import { Card } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -83,6 +82,7 @@ function Grilla() {
       <Grid container spacing={6} sx={{ marginTop: "5%" }}>
         {devices.map((device) => (
           <Grid item xs={6} sm={3} md={3} lg={3} xl={3} key={device.id}>
+            <StyledLink to={`/detail/${device.id}`}>
             <Card
               sx={{
                 margin: "0 0 18px 0",
@@ -104,11 +104,9 @@ function Grilla() {
                 }}
               >
                 <Grid item>
-                  <StyledLink to={`/detail/${device.id}`}>
                     <ButtonBase sx={{ width: "100%", height: 125 }}>
                       <Img alt={device.name} src={device.images[0]} />
                     </ButtonBase>
-                  </StyledLink>
                 </Grid>
                 <Grid
                   item
@@ -125,6 +123,7 @@ function Grilla() {
                         gutterBottom
                         variant="subtitle1"
                         component="div"
+                        sx={{fontWeight:"bold"}}
                       >
                         {device.name}
                       </Typography>
@@ -147,6 +146,7 @@ function Grilla() {
                 </Grid>
               </Grid>
             </Card>
+            </StyledLink>
           </Grid>
         ))}
       </Grid>

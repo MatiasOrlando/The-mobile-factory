@@ -29,6 +29,7 @@ import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import { queryProducts } from "../../state/querySearch";
 import { resetAllP } from "../../state/allProducts";
 import { resetAllCust } from "../../state/allCustomers";
+import HomeIcon from '@mui/icons-material/Home';
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
@@ -165,16 +166,22 @@ const Navbar = () => {
             </Typography>
             <>
               <Tabs
-                sx={{ marginLeft: "auto" }}
+                sx={{ marginLeft: "10%", width:"50%"}}
                 indicatorColor="primary"
                 textColor="inherit"
                 value={activeTab}
               >
-                <StyledLink to={"/"}>
-                  <Tab
-                    label="home"
-                    sx={{ color: "white" }}
+                <StyledLink to={"/"}  sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginLeft: "2%",
+                    }}
                     onClick={() => setActiveTab(0)}
+                    >
+                  <HomeIcon sx={{ color: "white", width: "0.85em" }}/>
+                  <Tab
+                    label="inicio"
+                    sx={{ color: "white", paddingLeft: 0.5,}}
                   />
                 </StyledLink>
                 {user.id ? (
@@ -207,9 +214,6 @@ const Navbar = () => {
                     }}
                     onClick={() => setActiveTab(2)}
                   >
-                    <SupervisorAccountIcon
-                      sx={{ color: "white", width: "0.85em", padding: "0px", margin: "0px" }}
-                    />
                     <Tab
                       label="Admin"
                       sx={{
@@ -226,10 +230,7 @@ const Navbar = () => {
                 {
                   /* user.admin || user.owner */
                   user.admin || user.owner ? (
-                    <StyledLink to={"/categorias"} sx={{display:"flex", alignItems:"center"}}>
-                      <SupervisorAccountIcon
-                      sx={{ color: "white", width: "0.85em" }}
-                    />
+                    <StyledLink to={"/categorias"} sx={{display:"flex", alignItems:"center", marginRight:"4%"}}>
                       <Tab
                         label="categorias"
                         sx={{ color: "white", padding:"0px" }}
@@ -245,9 +246,6 @@ const Navbar = () => {
                   /* user.admin || user.owner */
                   user.admin || user.owner ? (
                     <StyledLink to={"/productos"} sx={{display:"flex", alignItems:"center"}}>
-                      <SupervisorAccountIcon
-                      sx={{ color: "white", width: "0.85em" }}
-                    />
                       <Tab
                         label="productos"
                         sx={{ color: "white", padding:"0px" }}
@@ -265,11 +263,11 @@ const Navbar = () => {
               {user.id ? (
                 <>
                   <div
-                    style={{ padding: "0px 20px 0px 20px ", display: "flex" }}
+                    style={{ padding: "0px 20px 0px 20px ", display: "flex", alignItems:"center"}}
                   >
                     <Typography
                       //onClick={() => handleProfile()}
-                      sx={{ marginRight: "2%", textAlign: "center" }}
+                      sx={{ marginRight: "2%", fontWeight:"bold",fontSize:"100%", marginRight:"10%"}}
                       variant="caption"
                     >
                       {user.full_name}
