@@ -3,7 +3,7 @@ const db = require("../db/db");
 const Customer = require("./Customer");
 const Product = require("./Product");
 
-class Carrito extends S.Model {}
+class Carrito extends S.Model { }
 
 Carrito.init(
   {
@@ -17,6 +17,10 @@ Carrito.init(
       allowNull: false,
     },
     price: {
+      type: S.STRING,
+      allowNull: false,
+    },
+    name: {
       type: S.STRING,
       allowNull: false,
     }

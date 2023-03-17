@@ -8,12 +8,14 @@ import {
   CardMedia,
   Typography,
   IconButton,
+  Button,
 } from "@mui/material";
 import { Add, Remove, Delete } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { cartProducts, removeProduct } from "../../state/products";
 import { useNavigate } from "react-router-dom";
+import SendIcon from "@mui/icons-material/Send";
 
 function GrillaDeProductos() {
   const dispatch = useDispatch();
@@ -74,6 +76,11 @@ function GrillaDeProductos() {
       .map((product) => parseInt(product.price) * product.shopQuantity)
       .reduce((acumulador, elemento) => acumulador + elemento, 0);
     return totalPriceItems;
+  }
+
+  function confirmBuy () {
+    console.log("ENTRAMOS");
+    navigate("/shopConfirm")
   }
 
   return (
@@ -142,12 +149,23 @@ function GrillaDeProductos() {
         style={{
           display: "flex",
           justifyContent: "flex-end",
-          marginTop: "70px",
+          marginTop: "50px",
+          alignItems: "center",
         }}
       >
         <Typography variant="h6" gutterBottom>
           Total a pagar: €{totalSum()}
         </Typography>
+        <Button
+          variant="contained"
+          type="submit"
+          color="success"
+          endIcon={<SendIcon />}
+          sx={{ margin: "10px" }}
+          onClick={() => confirmBuy()}
+        >
+          CONFIRMAR COMPRA
+        </Button>
       </div>
     </Container>
   );

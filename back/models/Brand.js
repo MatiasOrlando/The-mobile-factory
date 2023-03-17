@@ -8,10 +8,10 @@ Brand.init(
     name: {
       type: S.STRING,
       allowNull: false,
+      unique: true,
     },
     description: {
       type: S.STRING,
-      allowNull: false,
     },
   },
   {
@@ -19,5 +19,9 @@ Brand.init(
     modelName: "brand",
   }
 );
+
+Brand.addHook("beforeCreate", (brand) => {
+  return (brand.name = brand.name.toLowerCase());
+});
 
 module.exports = Brand;

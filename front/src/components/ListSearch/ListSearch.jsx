@@ -5,12 +5,10 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
-import "./Content.css";
 import { Card } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { cartProducts } from "../../state/products";
-import AppPagination from "../AppPagination/AppPagination";
 import axios from "axios";
 import { Button, CircularProgress } from "@mui/material";
 
@@ -24,33 +22,15 @@ const StyledLink = styled(Link)({
   textDecoration: "none",
 });
 
-function Grilla() {
-  const [devices, setDevices] = useState([]);
-  const [page, setPage] = useState(130);
-  const [pagination, setPagination] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+function ListSearch() {
+  //const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  let count= 0
 
   const cart = useSelector((state) => state.products);
   const user = useSelector((state) => state.user);
-
-  useEffect(() => {
-    async function fetchDevices() {
-      setIsLoading(true);
-      const response = await fetch(
-        `http://localhost:3001/products?page=${page}`
-      );
-      const data = await response.json();
-      setDevices(data);
-      setIsLoading(false);
-      setPagination(true)
-    }
-    fetchDevices();
-  }, [page]);
+  const queryData = useSelector((state) => state.queryData);
 
   const handleCarrito = async (device) => {
-    console.log(device.stock--);
     try {
       const productAdded = await axios.post(`http://localhost:3001/carrito`, {
         productId: Number(device.id),
@@ -62,6 +42,7 @@ function Grilla() {
       console.error(error);
     }
   };
+  console.log(queryData);
 
   return (
     
@@ -75,13 +56,9 @@ function Grilla() {
           theme.palette.mode === "dark" ? "#1A2027" : "#fff",
       }}
     >
-      {isLoading ? (
-        <Grid container justifyContent="center">
-          <CircularProgress sx={{marginTop:"10%"}} />
-        </Grid>
-      ) :(
+      
       <Grid container spacing={6} sx={{ marginTop: "5%" }}>
-        {devices.map((device) => (
+        {queryData.map((device) => (
           <Grid item xs={6} sm={3} md={3} lg={3} xl={3} key={device.id}>
             <Card
               sx={{
@@ -137,6 +114,23 @@ function Grilla() {
                       <Typography variant="body2" color="text.secondary">
                         Color: {device.color}
                       </Typography>
+                      <Grid item>
+                        <StyledLink to={`/detail/${device.id}`}>
+                          <Typography>ver detalles</Typography>{" "}
+                        </StyledLink>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        disabled={device.stock ? false : true}
+                        onClick={() => {
+                          handleCarrito(device);
+                        }}
+                        sx={{ cursor: "pointer" }}
+                        variant="body2"
+                      >
+                        Añadir al carrito
+                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -150,9 +144,7 @@ function Grilla() {
           </Grid>
         ))}
       </Grid>
-      )}
-      {pagination && <AppPagination setPage={setPage} setPagination={setPagination} />}
     </Paper>
   );
 }
-export default Grilla;
+export default ListSearch;
