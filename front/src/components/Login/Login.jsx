@@ -53,6 +53,9 @@ export const Login = (user) => {
       if (typeof userCarrito.data !== "string") {
         dispatch(loginProducts(userCarrito.data));
       }
+      localStorage.setItem("valoraciones", JSON.stringify([]));
+      localStorage.setItem("comentarios", JSON.stringify([]));
+
       navigate("/");
     } catch (error) {
       console.error(error);

@@ -10,6 +10,7 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  MenuItem,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useDispatch, useSelector } from "react-redux";
@@ -219,6 +220,8 @@ const Navbar = () => {
                     </StyledLink>
                   ))}
 
+
+
                 {
                   /* user.admin || user.owner */
                   user.admin ||
@@ -248,6 +251,7 @@ const Navbar = () => {
                 }
                 {/* <Tab label="marcas" onClick={() => setActiveTab(3)} />
                 <Tab label="sale" onClick={() => setActiveTab(4)} /> */}
+
               </Tabs>
 
               {user.id ? (

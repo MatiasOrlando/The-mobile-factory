@@ -12,6 +12,8 @@ import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { cartProducts } from "../../state/products";
+import { RatingProduct } from "../Rating/RatingProduct";
+import { Comments } from "../Comments/Comments";
 
 function CardItem() {
   const dispatch = useDispatch();
@@ -34,6 +36,7 @@ function CardItem() {
 
   useEffect(() => {
     axios.get(`http://localhost:3001/products/${id}`).then((data) => {
+      console.log(data.data);
       setPhone(data);
     });
   }, [id]);
@@ -101,6 +104,7 @@ function CardItem() {
                   <Typography variant="body2" color="text.secondary">
                     Stock: {phone.data.stock}
                   </Typography>
+                  <RatingProduct id={phone.data.id} />
                 </CardContent>
               </CardActionArea>
               <CardActions
@@ -121,6 +125,7 @@ function CardItem() {
                 </Button>
               </CardActions>
             </Card>
+            <Comments id={phone.data.id} />
           </Grid>
         </Grid>
       </Box>
@@ -129,13 +134,3 @@ function CardItem() {
 }
 
 export default CardItem;
-
-// <Button
-//                   size="small"
-//                   color="primary"
-//                   onClick={() => {
-//                     dispatch(cartProducts(device));
-//                   }}
-//                 >
-//                   Añadir al carrito
-//                 </Button>
