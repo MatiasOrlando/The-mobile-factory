@@ -55,6 +55,7 @@ function ListSearch() {
       <Grid container spacing={6} sx={{ marginTop: "5%" }}>
         {queryData.map((device) => (
           <Grid item xs={6} sm={3} md={3} lg={3} xl={3} key={device.id}>
+            <StyledLink to={`/detail/${device.id}`}>
             <Card
               sx={{
                 margin: "0 0 18px 0",
@@ -76,11 +77,9 @@ function ListSearch() {
                 }}
               >
                 <Grid item>
-                  <StyledLink to={`/detail/${device.id}`}>
                     <ButtonBase sx={{ width: "100%", height: 125 }}>
                       <Img alt={device.name} src={device.images.length ? device.images[0] : "https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101028/112815904-no-image-available-icon-flat-vector-illustration.jpg?ver=6"} />
                     </ButtonBase>
-                  </StyledLink>
                 </Grid>
                 <Grid
                   item
@@ -97,6 +96,7 @@ function ListSearch() {
                         gutterBottom
                         variant="subtitle1"
                         component="div"
+                        sx={{fontWeight:"bold"}}
                       >
                         {device.name}
                       </Typography>
@@ -109,23 +109,6 @@ function ListSearch() {
                       <Typography variant="body2" color="text.secondary">
                         Color: {device.color}
                       </Typography>
-                      <Grid item>
-                        <StyledLink to={`/detail/${device.id}`}>
-                          <Typography>ver detalles</Typography>{" "}
-                        </StyledLink>
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        disabled={device.stock ? false : true}
-                        onClick={() => {
-                          handleCarrito(device);
-                        }}
-                        sx={{ cursor: "pointer" }}
-                        variant="body2"
-                      >
-                        Añadir al carrito
-                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -136,6 +119,7 @@ function ListSearch() {
                 </Grid>
               </Grid>
             </Card>
+            </StyledLink>
           </Grid>
         ))}
       </Grid>
