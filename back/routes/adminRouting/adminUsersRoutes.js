@@ -7,15 +7,18 @@ adminUsersRoutes.put("/add", async (req, res) => {
   // NECESITO ID USUARIO OWNER Y EMAIL DEL USUARIO A CONVERTIR EN ADM
   // Se verifica primero con el ID que el usuario sea OWNER/ADM GOD para realizar cambios y luego ejecuta.
   // const {id, emailUser} = req.body
-  const id = 1;
-  const email = "mat@gmail.com";
+ /*  const id = 1;
+  const email = "pepe@mail.com"; */
+
+  const {id, email, old} = req.body;
+
   try {
     const validEmail = await Customer.findOne({ where: { email } });
     const userOwner = await Customer.findByPk(id);
     if (userOwner.dataValues.owner && validEmail) {
       const [extras, updatedUser] = await Customer.update(
         {
-          admin: true,
+          admin: !old,
         },
         { where: { email }, returning: true }
       );
@@ -32,10 +35,11 @@ adminUsersRoutes.put("/add", async (req, res) => {
 
 adminUsersRoutes.get("/getUsers", async (req, res) => {
   // NECESITO ID USUARIO OWNER O ADMIN para verificar que pueda ver todos los usuarios por query
-  // const {id} = req.query
-  const id = 1;
+  const {id} = req.query
+ 
+  /* const id = 1; */
   try {
-    const userPrivileged = await Customer.findByPk(id);
+    const userPrivileged = await Customer.findByPk(parseInt(id));
     if (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) {
       const allUsersData = await Customer.findAll();
       const arrayUsers = [];
@@ -54,11 +58,18 @@ adminUsersRoutes.delete("/deleteUser", async (req, res) => {
   // NECESITO ID USUARIO OWNER Y EMAIL DEL USUARIO A BORRAR
   // Se verifica primero con el ID que el usuario sea OWNER/ADM GOD para realizar cambios y luego ejecuta.
   // const {id, emailUsuarioABorrar} = req.body
-  const id = 4;
-  const email = "dai@gmail.com";
+  /* const id = 4;
+  const email = "dai@gmail.com"; */
+
+  const {id, email} = req.query;
+
+  if (email === "owner@mail.com") {
+    return res.status(404).send(`You can't delete the owner!`)
+  }
+
   try {
     const validUserToDelete = await Customer.findOne({ where: { email } });
-    const userPrivileged = await Customer.findByPk(id);
+    const userPrivileged = await Customer.findByPk(parseInt(id));
     if (
       (userPrivileged.dataValues.owner || userPrivileged.dataValues.admin) &&
       validUserToDelete

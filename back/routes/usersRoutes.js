@@ -5,11 +5,21 @@ const { validateUser } = require("../middleware/auth");
 const { generateToken } = require("../config/token");
 
 userRouter.post("/register", (req, res) => {
-  Customer.create(req.body)
+  const emailGod = "owner@mail.com"
+  if (req.body.email === emailGod) {
+    req.body.owner = true;
+    Customer.create(req.body)
     .then((user) => {
       res.status(201).send(user);
     })
     .catch(() => res.send(404));
+  } else {
+    Customer.create(req.body)
+    .then((user) => {
+      res.status(201).send(user);
+    })
+    .catch(() => res.send(404));
+  }
 });
 
 userRouter.post("/login", (req, res) => {

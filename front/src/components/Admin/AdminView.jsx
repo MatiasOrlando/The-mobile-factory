@@ -1,20 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Radio, Button, Typography, Checkbox} from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAllCust, removeAllCust, updateAllCust } from '../../state/allCustomers';
+import axios from 'axios';
 
 function AdminView() {
-  const [users, setUsers] = useState([
-    { id: 1, name: "John", email: "john@example.com", role: "admin" },
-    { id: 2, name: "Jane", email: "jane@example.com", role: "user" },
-    { id: 3, name: "Bob", email: "bob@example.com", role: "user" },
-  ]);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const allCustomers = useSelector((state) => state.allCustomers);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const customers = await axios.get(
+          `http://localhost:3001/admin/users/getUsers?id=${user.id}`
+        );
+        console.log(customers.data);
+        dispatch(loginAllCust(customers.data));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    if (!allCustomers.length && user.id) {
+      fetchData();
+    }
+  }, [user, allCustomers]);
+
   const [selectedUser, setSelectedUser] = useState(null);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'name', headerName: 'Nombre', width: 150 },
+    { field: 'full_name', headerName: 'Nombre', width: 150 },
     { field: 'email', headerName: 'Email', width: 200 },
-    { field: 'role', headerName: 'Rol', width: 120 },
+    { field: 'admin', headerName: 'Admin', width: 120 },
     {
       field: 'select',
       headerName: 'Check',
@@ -34,27 +53,25 @@ function AdminView() {
       ),
     },
   ];
-  const handlePromote = () => {
-    
-    setUsers(users.map(user => {
-      if (user.id === selectedUser) {
-        console.log("SET USER:",selectedUser);
-    console.log("USER:",user.id);
-        return { ...user, role: 'admin' };
-      } else {
-        return user;
-      }
-    }));
+  const handlePromote = async () => {
+    const usr = allCustomers.find((item) => item.id === selectedUser)
+    try {
+      const updatedUser = await axios.put("http://localhost:3001/admin/users/add", {id: user.id, email: usr.email, old: usr.admin})
+      dispatch(updateAllCust(updatedUser.data))
+    } catch (error) {
+      console.error(error)
+    }
   };
   
-  const handleRevoke = () => {
-    setUsers(users.map(user => {
-      if (user.id === selectedUser) {
-        return { ...user, role: 'user' };
-      } else {
-        return user;
-      }
-    }));
+  const handleDelete = async () => {
+    const usr = allCustomers.find((item) => item.id === selectedUser)
+    try {
+      const deletedUser = await axios.delete(`http://localhost:3001/admin/users/deleteUser?id=${user.id}&email=${usr.email}`)
+      console.log(deletedUser.data);
+      dispatch(removeAllCust(deletedUser.data[0]))
+    } catch (error) {
+      console.error(error)
+    }
   };
   
   return (
@@ -63,11 +80,11 @@ function AdminView() {
                 Administracion
               </Typography>
       <div style={{ height: 400, width: '100%'}}>
-        <DataGrid rows={users} columns={columns} pageSize={5} />
+        <DataGrid rows={allCustomers} columns={columns} pageSize={5} />
       </div>
       <div>
-        <Button variant="outlined" color="primary" sx={{marginRight:"2%"}} onClick={handlePromote}>Promover</Button>
-        <Button variant="outlined" color="primary" onClick={handleRevoke}>Revocar</Button>
+        <Button variant="outlined" color="primary" sx={{marginRight:"2%"}} onClick={handlePromote}>Promover/Revocar</Button>
+        <Button variant="contained" color="error" onClick={handleDelete}>ELIMINAR</Button>
       </div>
     </div>
   );

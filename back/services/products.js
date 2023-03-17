@@ -1,6 +1,6 @@
 const axios = require("axios");
 const Product = require("../models/Product");
-const mappedArray = require("../config/dataFetch");
+const { mappedArray } = require("../config/dataFetch");
 const { Brand } = require("../models");
 
 class ProductsService {
