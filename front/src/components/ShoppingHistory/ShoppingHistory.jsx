@@ -90,7 +90,7 @@ function ShoppingHistory() {
                       Precio
                     </TableCell>
                     <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                      Catidad
+                      Cantidad
                     </TableCell>
                     <TableCell align="right" sx={{ fontWeight: "bold" }}>
                       Nro de Orden
@@ -132,7 +132,7 @@ function ShoppingHistory() {
                       <TableCell align="right">N{purchase.id}</TableCell>
                       {user.owner || user.admin ? (
                       <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                        Users
+                        {purchase.mail}
                       </TableCell>
                     ) : (
                       false
