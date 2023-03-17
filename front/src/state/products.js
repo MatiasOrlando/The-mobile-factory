@@ -1,4 +1,4 @@
-import { createAction, createReducer, current } from "@reduxjs/toolkit";
+import { createAction, createReducer } from "@reduxjs/toolkit";
 
 export const cartProducts = createAction("CART_PRODUCTS");
 export const removeProduct = createAction("REMOVE_PRODUCT");

@@ -5,14 +5,10 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
-import "./Content.css";
 import { Card } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { cartProducts } from "../../state/products";
 import AppPagination from "../AppPagination/AppPagination";
-import axios from "axios";
-import { Button, CircularProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 
 const Img = styled("img")({
   margin: "auto",
@@ -29,11 +25,6 @@ function Grilla() {
   const [page, setPage] = useState(130);
   const [pagination, setPagination] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const dispatch = useDispatch();
-  let count= 0
-
-  const cart = useSelector((state) => state.products);
-  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     async function fetchDevices() {
@@ -49,27 +40,11 @@ function Grilla() {
     fetchDevices();
   }, [page]);
 
-  const handleCarrito = async (device) => {
-    console.log(device.stock--);
-    try {
-      const productAdded = await axios.post(`http://localhost:3001/carrito`, {
-        productId: Number(device.id),
-        customerId: Number(user.id),
-        productQuantity: 1,
-      });
-      dispatch(cartProducts(productAdded.data));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
-    
      <Paper
       sx={{
         p: 2,
         margin: "auto",
-        //maxWidth: 500,
         flexGrow: 1,
         backgroundColor: (theme) =>
           theme.palette.mode === "dark" ? "#1A2027" : "#fff",

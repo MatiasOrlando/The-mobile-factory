@@ -1,5 +1,4 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
-import toast from "react-hot-toast";
 
 export const removeAllCust = createAction("REMOVE_ALL_CUST");
 export const resetAllCust = createAction("RESET_ALL_CUST");

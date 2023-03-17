@@ -1,6 +1,5 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,15 +7,13 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 
 function ShoppingHistory() {
-  const [histProds, setHistProds] = useState([]);
-
-  const [data, setData] = useState([]);
-
   const user = useSelector((state) => state.user);
+
+  const [histProds, setHistProds] = useState([]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     async function fetchUser() {
@@ -24,13 +21,11 @@ function ShoppingHistory() {
         `http://localhost:3001/checkout/ordersOneUser/${user.id}`
       );
       const data = await response.json();
-
       let arr = [];
       setData(data);
       let miData = data.map((el) => {
         return { prods: el.products, id: el.id };
       });
-
       miData.forEach((el) => {
         el.prods.forEach((e) => arr.push({ prod: JSON.parse(e), id: el.id }));
       });
@@ -42,13 +37,11 @@ function ShoppingHistory() {
         `http://localhost:3001/checkout/ordersUser/${user.id}`
       );
       const data = await response.json();
-
       let arr = [];
       setData(data);
       let miData = data.map((el) => {
         return { prods: el.products, id: el.id };
       });
-
       miData.forEach((el) => {
         el.prods.forEach((e) => arr.push({ prod: JSON.parse(e), id: el.id }));
       });
