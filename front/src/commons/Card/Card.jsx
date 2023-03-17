@@ -55,21 +55,22 @@ function CardItem() {
     return (
       <Box
         sx={{
-          height: "100vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           width: "60%",
           margin: "0 auto",
+          marginTop: "10%",
+          // sacado heigth 100vh
         }}
       >
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <Card
               sx={{
-                height: "100%",
                 display: "flex",
                 flexDirection: "column",
+                // sacado heigth 100%
               }}
             >
               <CardActionArea sx={{ flex: 1 }}>
@@ -134,8 +135,8 @@ function CardItem() {
                 </Button>
               </CardActions>
             </Card>
-            <Comments id={phone.data.id} />
           </Grid>
+          <Comments id={phone.data.id} />
         </Grid>
       </Box>
     );
