@@ -13,12 +13,10 @@ import { useSelector } from "react-redux";
 
 function ShoppingHistory() {
   const [histProds, setHistProds] = useState([]);
-  
 
   const [data, setData] = useState([]);
 
   const user = useSelector((state) => state.user);
-  
 
   useEffect(() => {
     async function fetchUser() {
@@ -57,11 +55,10 @@ function ShoppingHistory() {
       setHistProds(arr);
     }
 
-
-    if(user.admin || user.owner){
-      fetchAdmin()
-    }else{
-      fetchUser()
+    if (user.admin || user.owner) {
+      fetchAdmin();
+    } else if (user.id) {
+      fetchUser();
     }
   }, [user]);
 

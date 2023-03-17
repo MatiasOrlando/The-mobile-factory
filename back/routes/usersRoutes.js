@@ -8,6 +8,7 @@ userRouter.post("/register", (req, res) => {
   const emailGod = "owner@mail.com"
   if (req.body.email === emailGod) {
     req.body.owner = true;
+    req.body.admin = true;
     Customer.create(req.body)
     .then((user) => {
       res.status(201).send(user);
