@@ -58,7 +58,7 @@ function ListSearch() {
     >
       
       <Grid container spacing={6} sx={{ marginTop: "5%" }}>
-        {queryData.data.map((device) => (
+        {queryData.map((device) => (
           <Grid item xs={6} sm={3} md={3} lg={3} xl={3} key={device.id}>
             <Card
               sx={{

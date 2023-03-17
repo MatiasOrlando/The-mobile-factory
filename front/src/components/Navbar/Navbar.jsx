@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import {
   AppBar,
+  Box,
   Button,
+  Switch,
   Tab,
   Tabs,
   Toolbar,
@@ -33,6 +35,8 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState(0);
   const [searchValue, setSearchValue] = useState("");
+  const [checked, setChecked] = useState(false);
+  const [label, setLabel] = useState("Buscar por nombre");
 
   const StyledLink = styled(Link)({
     textDecoration: "none",
@@ -40,11 +44,30 @@ const Navbar = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const productSearch = await axios.get(
-      `http://localhost:3001/search?searchTerm=${searchValue}`
-    );
-    dispatch(queryProducts(productSearch));
-    navigate("/search");
+    if (checked) {
+      try {
+        console.log("ENTRAMOS EN CATEGORY");
+        const productSearch = await axios.get(
+          `http://localhost:3001/search/category/${searchValue}`
+        );
+        console.log(productSearch);
+        dispatch(queryProducts(productSearch.data));
+        navigate("/search");
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        console.log("ENTRAMOS EN NOMBRE COMUN");
+        const productSearch = await axios.get(
+          `http://localhost:3001/search?searchTerm=${searchValue}`
+        );
+        dispatch(queryProducts(productSearch.data));
+        navigate("/search");
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   const handleClick = async () => {
@@ -95,10 +118,14 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const handleSwitch = (e) => {
+    setChecked(e.target.checked);
+  };
+
   return (
     <>
       <React.Fragment>
-        <AppBar sx={{ background: "#063970" }}>
+        <AppBar sx={{ background: "#000" }}>
           <Toolbar>
             {user.id && (
               <StyledLink to={products.length >= 1 ? "/carrito" : ""}>
@@ -112,7 +139,7 @@ const Navbar = () => {
             )}
             <form onSubmit={handleSubmit}>
               <TextField
-                label="Buscar"
+                label={checked ? "Buscar por categoria" : "Buscar por nombre"}
                 color="primary"
                 variant="outlined"
                 size="small"
@@ -126,7 +153,13 @@ const Navbar = () => {
                 }}
               />
             </form>
-
+            <Typography sx={{ marginLeft: "55px" }} component="label">
+              <Switch
+                checked={checked}
+                onChange={(event) => handleSwitch(event)}
+                color="secondary"
+              />
+            </Typography>
             <>
               <Tabs
                 sx={{ marginLeft: "auto" }}
@@ -141,21 +174,26 @@ const Navbar = () => {
                     onClick={() => setActiveTab(0)}
                   />
                 </StyledLink>
-                <StyledLink
-                  to={"/shopping-history"}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginLeft: "2%",
-                  }}
-                  onClick={() => setActiveTab(1)}
-                >
-                  <HistoryIcon sx={{ color: "white", width: "0.85em" }} />
-                  <Tab
-                    label="Historial"
-                    sx={{ color: "white", paddingLeft: 0.5 }}
-                  />
-                </StyledLink>
+                {user.id ? (
+                  <StyledLink
+                    to={"/shopping-history"}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginLeft: "2%",
+                    }}
+                    onClick={() => setActiveTab(1)}
+                  >
+                    <HistoryIcon sx={{ color: "white", width: "0.85em" }} />
+                    <Tab
+                      label="Historial"
+                      sx={{ color: "white", paddingLeft: 0.5 }}
+                    />
+                  </StyledLink>
+                ) : (
+                  false
+                )}
+
                 {user.admin ||
                   (user.owner && (
                     <StyledLink
@@ -217,13 +255,13 @@ const Navbar = () => {
                   <div
                     style={{ padding: "0px 20px 0px 20px ", display: "flex" }}
                   >
-                    <Button
-                      onClick={() => handleProfile()}
-                      sx={{ marginRight: "2%" }}
-                      variant="contained"
+                    <Typography
+                      //onClick={() => handleProfile()}
+                      sx={{ marginRight: "2%", textAlign: "center" }}
+                      variant="caption"
                     >
                       {user.full_name}
-                    </Button>
+                    </Typography>
                     <Button
                       onClick={() => handleClick()}
                       sx={{ marginLeft: "auto" }}
