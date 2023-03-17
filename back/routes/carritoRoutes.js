@@ -50,6 +50,7 @@ carritoRouter.post("/", async (req, res) => {
         price: product.price,
         productId: productId,
         customerId: customerId,
+        name: product.name
       },
     });
     if (!created) {
