@@ -46,11 +46,13 @@ function ShoppingHistory() {
       let arr = [];
       setData(data);
       let miData = data.map((el) => {
-        return { prods: el.products, id: el.id };
+        return { prods: el.products, id: el.id, mail: el.order_email };
       });
 
       miData.forEach((el) => {
-        el.prods.forEach((e) => arr.push({ prod: JSON.parse(e), id: el.id }));
+        el.prods.forEach((e) =>
+          arr.push({ prod: JSON.parse(e), id: el.id, mail: el.mail })
+        );
       });
       setHistProds(arr);
     }
@@ -100,6 +102,13 @@ function ShoppingHistory() {
                     <TableCell align="right" sx={{ fontWeight: "bold" }}>
                       Nro de Orden
                     </TableCell>
+                    {user.owner || user.admin ? (
+                      <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                        Users
+                      </TableCell>
+                    ) : (
+                      false
+                    )}
                     <TableCell align="right" sx={{ fontWeight: "bold" }}>
                       Subtotales ($)
                     </TableCell>
@@ -128,6 +137,13 @@ function ShoppingHistory() {
                         {purchase.prod.quantity}
                       </TableCell>
                       <TableCell align="right">N{purchase.id}</TableCell>
+                      {user.owner || user.admin ? (
+                      <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                        Users
+                      </TableCell>
+                    ) : (
+                      false
+                    )}
                       <TableCell align="right">
                         {(
                           parseFloat(purchase.prod.price) *
