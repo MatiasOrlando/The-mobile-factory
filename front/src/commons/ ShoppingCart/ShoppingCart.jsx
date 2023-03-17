@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -16,6 +15,7 @@ import axios from "axios";
 import { cartProducts, removeProduct } from "../../state/products";
 import { useNavigate } from "react-router-dom";
 import SendIcon from "@mui/icons-material/Send";
+import toast from "react-hot-toast";
 
 function GrillaDeProductos() {
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ function GrillaDeProductos() {
   const products = useSelector((state) => state.products);
   const user = useSelector((state) => state.user);
 
-  async function suma(producto) {
+  async function add(producto) {
     if (producto.shopQuantity < producto.stock) {
       try {
         const productAdded = await axios.post(`http://localhost:3001/carrito`, {
@@ -37,13 +37,25 @@ function GrillaDeProductos() {
         console.error(error);
       }
     } else {
-      alert("No hay más stock!");
+      toast.error("No hay más stock", {
+        duration: "180",
+        style: {
+          background: "white",
+          color: "black",
+        },
+      });
     }
   }
 
-  async function resta(producto) {
+  async function decrease(producto) {
     if (producto.shopQuantity === 1) {
-      alert("La cantidad debe ser igual o superior a 1!");
+      toast.error("La cantidad debe ser igual o superior a 1", {
+        duration: "180",
+        style: {
+          background: "white",
+          color: "black",
+        },
+      });
     } else {
       try {
         const productAdded = await axios.put(`http://localhost:3001/carrito`, {
@@ -58,12 +70,11 @@ function GrillaDeProductos() {
     }
   }
 
-  async function eliminar(producto) {
+  async function deleteP(producto) {
     try {
       const productDeleted = await axios.delete(
         `http://localhost:3001/carrito?productId=${producto.id}&customerId=${user.id}`
       );
-
       dispatch(removeProduct(productDeleted.data));
       products.length === 1 && navigate("/");
     } catch (error) {
@@ -78,9 +89,8 @@ function GrillaDeProductos() {
     return totalPriceItems;
   }
 
-  function confirmBuy () {
-    console.log("ENTRAMOS");
-    navigate("/shopConfirm")
+  function confirmBuy() {
+    navigate("/shopConfirm");
   }
 
   return (
@@ -95,7 +105,6 @@ function GrillaDeProductos() {
                   display: "flex",
                   flexDirection: "column",
                   maxWidth: 260,
-
                   justifyContent: "space-between",
                 }}
               >
@@ -124,19 +133,19 @@ function GrillaDeProductos() {
                   </Typography>
                   <IconButton
                     aria-label="Agregar"
-                    onClick={() => suma(producto)}
+                    onClick={() => add(producto)}
                   >
                     <Add />
                   </IconButton>
                   <IconButton
                     aria-label="Disminuir"
-                    onClick={() => resta(producto)}
+                    onClick={() => decrease(producto)}
                   >
                     <Remove />
                   </IconButton>
                   <IconButton
                     aria-label="Delete"
-                    onClick={() => eliminar(producto)}
+                    onClick={() => deleteP(producto)}
                   >
                     <Delete />
                   </IconButton>

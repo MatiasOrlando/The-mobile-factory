@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -10,7 +9,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { cartProducts } from "../../state/products";
 import axios from "axios";
-import { Button, CircularProgress } from "@mui/material";
+import { Button } from "@mui/material";
 
 const Img = styled("img")({
   margin: "auto",
@@ -23,10 +22,8 @@ const StyledLink = styled(Link)({
 });
 
 function ListSearch() {
-  //const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
-  const cart = useSelector((state) => state.products);
   const user = useSelector((state) => state.user);
   const queryData = useSelector((state) => state.queryData);
 
@@ -42,7 +39,6 @@ function ListSearch() {
       console.error(error);
     }
   };
-  console.log(queryData);
 
   return (
     
@@ -50,7 +46,6 @@ function ListSearch() {
       sx={{
         p: 2,
         margin: "auto",
-        //maxWidth: 500,
         flexGrow: 1,
         backgroundColor: (theme) =>
           theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -83,7 +78,7 @@ function ListSearch() {
               >
                 <Grid item>
                     <ButtonBase sx={{ width: "100%", height: 125 }}>
-                      <Img alt={device.name} src={device.images[0]} />
+                      <Img alt={device.name} src={device.images.length ? device.images[0] : "https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101028/112815904-no-image-available-icon-flat-vector-illustration.jpg?ver=6"} />
                     </ButtonBase>
                 </Grid>
                 <Grid

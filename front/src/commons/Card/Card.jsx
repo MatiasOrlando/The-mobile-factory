@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { cartProducts } from "../../state/products";
 import { RatingProduct } from "../Rating/RatingProduct";
 import { Comments } from "../Comments/Comments";
+import toast from "react-hot-toast";
 
 function CardItem() {
   const dispatch = useDispatch();
@@ -22,6 +23,15 @@ function CardItem() {
   const user = useSelector((state) => state.user);
 
   const handleCarrito = async (device) => {
+    if (!user.id) {
+      return toast.error("Debes estar logueado", {
+        duration: "180",
+        style: {
+          background: "white",
+          color: "black",
+        },
+      });
+    }
     try {
       const productAdded = await axios.post(`http://localhost:3001/carrito`, {
         productId: Number(device.id),
@@ -36,7 +46,6 @@ function CardItem() {
 
   useEffect(() => {
     axios.get(`http://localhost:3001/products/${id}`).then((data) => {
-      console.log(data.data);
       setPhone(data);
     });
   }, [id]);
@@ -46,21 +55,22 @@ function CardItem() {
     return (
       <Box
         sx={{
-          height: "100vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           width: "60%",
           margin: "0 auto",
+          marginTop: "10%",
+          // sacado heigth 100vh
         }}
       >
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <Card
               sx={{
-                height: "100%",
                 display: "flex",
                 flexDirection: "column",
+                // sacado heigth 100%
               }}
             >
               <CardActionArea sx={{ flex: 1 }}>
@@ -125,8 +135,8 @@ function CardItem() {
                 </Button>
               </CardActions>
             </Card>
-            <Comments id={phone.data.id} />
           </Grid>
+          <Comments id={phone.data.id} />
         </Grid>
       </Box>
     );

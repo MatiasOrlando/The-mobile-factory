@@ -18,5 +18,5 @@ app.use(express.json());
 app.use("/", router);
 
 db.sync({ force: false }).then(() => {
-  app.listen(3001, () => console.log("Server ON PORT: 3001"));
+  app.listen(3001, () => console.log(`Server ON PORT: 3001`));
 });

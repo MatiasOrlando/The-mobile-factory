@@ -1,4 +1,4 @@
-import { Paper, Grid } from "@mui/material";
+import { Paper, Grid, Button, TextField, Typography, Box } from "@mui/material";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -19,6 +19,7 @@ export const Comments = ({ id }) => {
 
   const onClickHandler = () => {
     dispatch(addComment({ id, commentaries: [comment] }));
+    setComment("");
   };
 
   const onChangeHandler = (e) => {
@@ -27,25 +28,51 @@ export const Comments = ({ id }) => {
 
   return (
     <div>
-      <h4>Agregar comentarios</h4>
-      <h4>Comentarios</h4>
-      {existComments.length
-        ? existComments.map((items) => (
-            <Paper style={{ padding: "20px 20px", marginTop: 10 }}>
-              <Grid>
-                <p style={{ textAlign: "left", color: "gray" }}>{items}</p>
-              </Grid>
-            </Paper>
-          ))
-        : false}
-      <textarea
-        value={comment}
-        onChange={onChangeHandler}
-        className="input-box"
-      />
-      <button onClick={onClickHandler} className="comment-button">
-        Enviar
-      </button>
+      <Box
+        sx={{
+          width: "100%",
+          marginTop: "20%",
+        }}
+      >
+        <Typography variant="h6" style={{ marginTop: "10%", padding: "1px" }}>
+          Comentarios
+        </Typography>
+
+        {existComments.length
+          ? existComments.map((items) => (
+              <Paper
+                style={{
+                  marginTop: "2%",
+                }}
+              >
+                <Grid>
+                  <Typography
+                    style={{
+                      padding: "10px",
+                      textAlign: "left",
+                      color: "gray",
+                    }}
+                  >
+                    {items}
+                  </Typography>
+                </Grid>
+              </Paper>
+            ))
+          : false}
+        <TextField
+          style={{ display: "flex", marginTop: "5%" }}
+          value={comment}
+          onChange={onChangeHandler}
+          placeholder="Añadir comentario"
+          multiline
+          variant="filled"
+          rows={3}
+        />
+
+        <Button style={{ display: "flex" }} onClick={onClickHandler}>
+          Enviar
+        </Button>
+      </Box>
     </div>
   );
 };

@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import {
   AppBar,
-  Box,
   Button,
   Switch,
   Tab,
   Tabs,
   Toolbar,
   Typography,
-  useMediaQuery,
-  useTheme,
-  MenuItem,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,10 +19,9 @@ import toast, { Toaster } from "react-hot-toast";
 import Badge from "@mui/material/Badge";
 import HistoryIcon from "@mui/icons-material/History";
 import { TextField } from "@mui/material";
-import { margin } from "@mui/system";
 import { resetCategories } from "../../state/categories";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
-import { queryProducts } from "../../state/querySearch";
+import { queryProducts, queryReset } from "../../state/querySearch";
 import { resetAllP } from "../../state/allProducts";
 import { resetAllCust } from "../../state/allCustomers";
 import HomeIcon from '@mui/icons-material/Home';
@@ -39,7 +34,6 @@ const Navbar = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [checked, setChecked] = useState(false);
-  const [label, setLabel] = useState("Buscar por nombre");
 
   const StyledLink = styled(Link)({
     textDecoration: "none",
@@ -49,11 +43,9 @@ const Navbar = () => {
     e.preventDefault();
     if (checked) {
       try {
-        console.log("ENTRAMOS EN CATEGORY");
         const productSearch = await axios.get(
           `http://localhost:3001/search/category/${searchValue}`
         );
-        console.log(productSearch);
         dispatch(queryProducts(productSearch.data));
         navigate("/search");
       } catch (error) {
@@ -61,7 +53,6 @@ const Navbar = () => {
       }
     } else {
       try {
-        console.log("ENTRAMOS EN NOMBRE COMUN");
         const productSearch = await axios.get(
           `http://localhost:3001/search?searchTerm=${searchValue}`
         );
@@ -86,13 +77,12 @@ const Navbar = () => {
       dispatch(resetCategories([]));
       dispatch(resetAllP([]));
       dispatch(resetAllCust([]));
+      dispatch(queryReset([]));
       navigate("/login");
     } catch (error) {
       console.error(error);
     }
   };
-
-  const theme = useTheme();
 
   const addQty = () => {
     const qtyItems = products.reduce(
@@ -116,10 +106,6 @@ const Navbar = () => {
           opacity: ".3",
         },
       });
-  };
-
-  const handleProfile = () => {
-    navigate("/");
   };
 
   const handleSwitch = (e) => {
@@ -210,7 +196,7 @@ const Navbar = () => {
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      width:"85px"
+                      width: "85px",
                     }}
                     onClick={() => setActiveTab(2)}
                   >
@@ -226,38 +212,35 @@ const Navbar = () => {
                 ) : (
                   false
                 )}
+                {user.admin || user.owner ? (
+                  <StyledLink
+                    to={"/categorias"}
+                    sx={{display:"flex", alignItems:"center", marginRight:"4%"}}
+                  >
+                    <Tab
+                      label="categorias"
+                      sx={{ color: "white", padding: "0px" }}
+                      onClick={() => setActiveTab(3)}
+                    />
+                  </StyledLink>
+                ) : (
+                  false
+                )}
 
-                {
-                  /* user.admin || user.owner */
-                  user.admin || user.owner ? (
-                    <StyledLink to={"/categorias"} sx={{display:"flex", alignItems:"center", marginRight:"4%"}}>
-                      <Tab
-                        label="categorias"
-                        sx={{ color: "white", padding:"0px" }}
-                        onClick={() => setActiveTab(3)}
-                      />
-                    </StyledLink>
-                  ) : (
-                    false
-                  )
-                }
-
-                {
-                  /* user.admin || user.owner */
-                  user.admin || user.owner ? (
-                    <StyledLink to={"/productos"} sx={{display:"flex", alignItems:"center"}}>
-                      <Tab
-                        label="productos"
-                        sx={{ color: "white", padding:"0px" }}
-                        onClick={() => setActiveTab(4)}
-                      />
-                    </StyledLink>
-                  ) : (
-                    false
-                  )
-                }
-                {/* <Tab label="marcas" onClick={() => setActiveTab(3)} />
-                <Tab label="sale" onClick={() => setActiveTab(4)} /> */}
+                {user.admin || user.owner ? (
+                  <StyledLink
+                    to={"/productos"}
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Tab
+                      label="productos"
+                      sx={{ color: "white", padding: "0px" }}
+                      onClick={() => setActiveTab(4)}
+                    />
+                  </StyledLink>
+                ) : (
+                  false
+                )}
               </Tabs>
 
               {user.id ? (
@@ -266,7 +249,6 @@ const Navbar = () => {
                     style={{ padding: "0px 20px 0px 20px ", display: "flex", alignItems:"center"}}
                   >
                     <Typography
-                      //onClick={() => handleProfile()}
                       sx={{ marginRight: "2%", fontWeight:"bold",fontSize:"100%", marginRight:"10%"}}
                       variant="caption"
                     >

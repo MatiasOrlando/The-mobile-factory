@@ -15,5 +15,8 @@
   "scripts": {
     "start": "npm start",
     "server": "nodemon server.js"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3"
   }
 }
