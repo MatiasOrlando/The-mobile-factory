@@ -249,7 +249,7 @@ const Navbar = () => {
                     style={{ padding: "0px 20px 0px 20px ", display: "flex", alignItems:"center"}}
                   >
                     <Typography
-                      sx={{ marginRight: "2%", fontWeight:"bold",fontSize:"100%", marginRight:"10%"}}
+                      sx={{ fontWeight:"bold",fontSize:"100%", marginRight:"10%"}}
                       variant="caption"
                     >
                       {user.full_name}
