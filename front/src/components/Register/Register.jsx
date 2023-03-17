@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Login from "@mui/icons-material/Login";
-
 import {
   Avatar,
   Typography,
@@ -16,20 +15,17 @@ import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const navigate = useNavigate();
+
   const [full_name, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [billing_address, setAddress] = useState("");
   const [country, setCountry] = useState("");
-
-  // Input Error
-
   const [fullnamelError, setFullnameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-
-  // Validation for OnBlur fullname
+  const [formValid, setFormValid] = useState();
 
   const handleFullname = (e) => {
     e.preventDefault();
@@ -44,8 +40,6 @@ export const Register = () => {
   const isEmail = (email) =>
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
 
-  // Validation for OnBlur email
-
   const handleEmail = () => {
     if (!isEmail(email)) {
       setEmailError(true);
@@ -53,8 +47,6 @@ export const Register = () => {
     }
     setEmailError(false);
   };
-
-  // Validation for OnBlur password
 
   const handlePassword = (e) => {
     e.preventDefault();
@@ -64,10 +56,6 @@ export const Register = () => {
     }
     setPasswordError(false);
   };
-
-  //Validation Form State
-
-  const [formValid, setFormValid] = useState();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -99,7 +87,6 @@ export const Register = () => {
         country,
       })
       .then((res) => {
-        console.log("Usuario creado", res.data);
         setFormValid();
         navigate("/login");
       })

@@ -14,8 +14,10 @@ import {
 
 const AdmProducts = () => {
   const dispatch = useDispatch();
+
   const allProductsRedux = useSelector((state) => state.allProducts);
   const user = useSelector((state) => state.user);
+  
   useEffect(() => {
     async function fetchData() {
       try {

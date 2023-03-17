@@ -7,14 +7,12 @@ import {
   Card,
   CardMedia,
   CardContent,
-  IconButton,
   InputLabel,
   Select,
   MenuItem,
   FormControl,
 } from "@mui/material";
 import React, { useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
 import SendIcon from "@mui/icons-material/Send";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -26,10 +24,21 @@ import { resetProducts } from "../../state/products";
 
 const ShopConfirmation = () => {
   const navigate = useNavigate();
-  /* const confDate = new Date(); */
   const dispatch = useDispatch();
+
   const products = useSelector((state) => state.products);
   const user = useSelector((state) => state.user);
+
+  const [cardType, setCardType] = useState("");
+  const [cardNum, setCardNum] = useState("");
+  const [payMethod, setPayMethod] = useState("tarjeta");
+  const [orderData, setOrderData] = useState({
+    price: totalSum(),
+    products: [...products],
+    shipping_address: user.default_shipping_address,
+    order_email: user.email,
+  });
+
   function totalSum() {
     const totalPriceItems = products
       .map((product) => parseInt(product.price) * product.shopQuantity)
@@ -37,22 +46,9 @@ const ShopConfirmation = () => {
     return totalPriceItems;
   }
 
-  const [orderData, setOrderData] = useState({
-    price: totalSum(),
-    products: [...products],
-    shipping_address: user.default_shipping_address,
-    order_email: user.email,
-    //PUEDO MANDAR UN DATE DIRECTAMENTE O STRING
-    /* order_date: confDate.toUTCString(), */
-  });
-
   const handleConfirmState = (e) => {
     setOrderData({ ...orderData, [e.target.id]: e.target.value });
   };
-
-  const [cardType, setCardType] = useState("");
-  const [cardNum, setCardNum] = useState("");
-  const [payMethod, setPayMethod] = useState("tarjeta");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -106,11 +102,6 @@ const ShopConfirmation = () => {
   };
 
   function onCreditCardChange(event) {
-    /* // formatted pretty value
-    console.log(event.target.value);
-    // raw value
-    console.log(event.target.rawValue); */
-
     const value = event.target.value;
     if (/^4/.test(value)) {
       setCardType("visa");

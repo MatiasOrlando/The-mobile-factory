@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { cartProducts } from "../../state/products";
 import { RatingProduct } from "../Rating/RatingProduct";
 import { Comments } from "../Comments/Comments";
+import toast from "react-hot-toast";
 
 function CardItem() {
   const dispatch = useDispatch();
@@ -22,6 +23,15 @@ function CardItem() {
   const user = useSelector((state) => state.user);
 
   const handleCarrito = async (device) => {
+    if (!user.id) {
+      return toast.error("Debes estar logueado", {
+        duration: "180",
+        style: {
+          background: "white",
+          color: "black",
+        },
+      });
+    }
     try {
       const productAdded = await axios.post(`http://localhost:3001/carrito`, {
         productId: Number(device.id),
@@ -36,7 +46,6 @@ function CardItem() {
 
   useEffect(() => {
     axios.get(`http://localhost:3001/products/${id}`).then((data) => {
-      console.log(data.data);
       setPhone(data);
     });
   }, [id]);

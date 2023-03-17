@@ -14,8 +14,10 @@ import SendIcon from "@mui/icons-material/Send";
 
 const AdmCategories = () => {
   const dispatch = useDispatch();
+
   const categoriesRedux = useSelector((state) => state.categories);
   const user = useSelector((state) => state.user);
+
   const [categoryToDelete, setCatToDelete] = useState([]);
   const [categoryCreation, setCatCreation] = useState(false);
 

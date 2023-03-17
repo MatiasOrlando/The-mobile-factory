@@ -1,39 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "../../state/user";
 import { Box, Button, TextField, Typography, Alert } from "@mui/material";
-import { cartProducts, loginProducts } from "../../state/products";
+import { loginProducts } from "../../state/products";
 
 export const Login = (user) => {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // Input Error
-
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-
-  // Email Validation
-  const isEmail = (email) =>
-    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
-
-  // Validation for OnBlur password
-
-  const handlePassword = (e) => {
-    e.preventDefault();
-    if (!password || password.length < 4) {
-      setPasswordError(true);
-      return;
-    }
-    setPasswordError(false);
-  };
-
-  //Validation Form State
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [formValid, setFormValid] = useState();
 
   const handleSubmit = async (e) => {
@@ -44,7 +22,6 @@ export const Login = (user) => {
         { email, password },
         { withCredentials: true }
       );
-
       localStorage.setItem("user", JSON.stringify(userLog.data));
       dispatch(setUser(userLog.data));
       const userCarrito = await axios.get(
@@ -55,7 +32,6 @@ export const Login = (user) => {
       }
       localStorage.setItem("valoraciones", JSON.stringify([]));
       localStorage.setItem("comentarios", JSON.stringify([]));
-
       navigate("/");
     } catch (error) {
       console.error(error);
