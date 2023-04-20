@@ -14,6 +14,7 @@ cd back     | cd front
 ------------|---------
 npm run server | npm run dev
 
+<br>
 ## Technologies 🛠️
 
 This project was developed using the following technologies:
@@ -31,13 +32,13 @@ Back-end:
 <li>Node - Express JS</li>
 <li>PostgreSQL - Sequelize</li>
 </ul>
-
+<br>
 
 ## Version :pencil:
 
 ### v1.0.0 - March 17, 2023
 * Initial version
-
+<br>
 ## Authors :rocket:
 
 * Guido Bonesi
