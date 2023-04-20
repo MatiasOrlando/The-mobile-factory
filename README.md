@@ -14,6 +14,25 @@ cd back     | cd front
 ------------|---------
 npm run server | npm run dev
 
+## Technologies 🛠️
+
+This project was developed using the following technologies:
+
+Front-end:
+
+<ul>
+<li>React</li>
+<li>Material-UI/li>
+</ul>
+
+Back-end:
+
+<ul>
+<li>Node - Express JS</li>
+<li>PostgreSQL - Sequelize</li>
+</ul>
+
+
 ## Version :pencil:
 
 ### v1.0.0 - March 17, 2023
