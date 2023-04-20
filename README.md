@@ -16,7 +16,7 @@ npm run server | npm run dev
 
 ## Version :pencil:
 
-### v1.0.0 - 17 de Marzo, 2023
+### v1.0.0 - March 17, 2023
 * Initial version
 
 ## Authors :rocket:
